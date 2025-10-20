@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Carte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            color: #2B2B2B;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            position: absolute;
+            top: 54px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 999;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+        }
+
+        .back-button {
+            font-size: 28px;
+            color: #7FB6C2;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .back-button:active {
+            transform: scale(0.9);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .menu-button {
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .menu-button:active {
+            transform: scale(0.9);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .filter-bar {
+            position: absolute;
+            top: 130px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 800;
+            overflow-x: auto;
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .filter-btn.active {
+            background: #7FB6C2;
+            color: white;
+        }
+
+        .timeline-toggle {
+            position: absolute;
+            bottom: 300px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            z-index: 900;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .timeline-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .location-card {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            z-index: 900;
+            animation: slideUp 0.3s ease-out;
+            display: none;
+        }
+
+        .location-card.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FFE79A 0%, #7FB6C2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .card-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-info {
+            flex: 1;
+        }
+
+        .card-location {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .card-country {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .card-date {
+            display: inline-block;
+            background: #FFE79A;
+            color: #2B2B2B;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card-gallery {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .card-gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-item {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%);
+            border-radius: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .card-button {
+            width: 100%;
+            padding: 14px;
+            background: #7FB6C2;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .card-button:active {
+            transform: scale(0.98);
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: absolute;
+            bottom: 34px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        /* Custom Leaflet Styles */
+        .custom-marker {
+            background: white;
+            border: 3px solid #7FB6C2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .current-marker {
+            animation: pulse-marker 2s infinite;
+            border-color: #FFE79A;
+        }
+
+        @keyframes pulse-marker {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 16px;
+            padding: 8px;
+        }
+
+        .leaflet-popup-content {
+            margin: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .popup-date {
+            font-size: 13px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="back-button" onclick="navigateTo('home')">‹</div>
+                <div class="header-title">Carte du voyage</div>
+                <div class="menu-button">⋯</div>
+            </div>
+
+            <div id="map"></div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterLocations('all')">🗺️ Tous</button>
+                <button class="filter-btn" onclick="filterLocations('mountain')">🏔️ Montagnes</button>
+                <button class="filter-btn" onclick="filterLocations('coast')">🌊 Côtes</button>
+                <button class="filter-btn" onclick="filterLocations('city')">🏙️ Villes</button>
+                <button class="filter-btn" onclick="filterLocations('podcast')">🎧 Podcasts</button>
+            </div>
+
+            <div class="timeline-toggle" onclick="toggleTimeline()">
+                📅
+            </div>
+
+            <div class="location-card" id="locationCard">
+                <div class="card-header">
+                    <div class="card-image">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop" alt="Andorre" class="card-photo">
+                    </div>
+                    <div class="card-info">
+                        <div class="card-location" id="cardTitle">Andorre-la-Vieille</div>
+                        <div class="card-country" id="cardCountry">Andorre</div>
+                        <span class="card-date" id="cardDate">16 Oct 2025</span>
+                    </div>
+                </div>
+
+                <div class="card-gallery">
+                    <div class="gallery-item">📸</div>
+                    <div class="gallery-item">🎥</div>
+                    <div class="gallery-item">🎧</div>
+                    <div class="gallery-item">📝</div>
+                </div>
+
+                <button class="card-button" onclick="exploreLocation()">📍 Découvrir ce pays</button>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('data')">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('profile')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données des lieux visités
+        const locations = [
+            { name: 'Paris', country: 'France', lat: 48.8566, lng: 2.3522, date: '01 Oct 2025', type: 'city', emoji: '🗼', current: false },
+            { name: 'Lyon', country: 'France', lat: 45.7640, lng: 4.8357, date: '05 Oct 2025', type: 'city', emoji: '🍷', current: false },
+            { name: 'Toulouse', country: 'France', lat: 43.6047, lng: 1.4442, date: '08 Oct 2025', type: 'city', emoji: '✈️', current: false },
+            { name: 'Barcelone', country: 'Espagne', lat: 41.3851, lng: 2.1734, date: '13 Oct 2025', type: 'coast', emoji: '🌊', current: false },
+            { name: 'Andorre-la-Vieille', country: 'Andorre', lat: 42.5063, lng: 1.5218, date: '16 Oct 2025', type: 'mountain', emoji: '🏔️', current: true },
+        ];
+
+        let map;
+        let markers = [];
+        let polyline;
+
+        // Initialiser la carte
+        function initMap() {
+            map = L.map('map', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView([45.5, 5.0], 6);
+
+            // Ajouter le fond de carte avec style personnalisé
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Ajouter la ligne de trajet
+            const routeCoordinates = locations.map(loc => [loc.lat, loc.lng]);
+            polyline = L.polyline(routeCoordinates, {
+                color: '#7FB6C2',
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '10, 10'
+            }).addTo(map);
+
+            // Ajouter les marqueurs
+            locations.forEach((location, index) => {
+                const markerIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div class="custom-marker ${location.current ? 'current-marker' : ''}">${location.emoji}</div>`,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                });
+
+                const marker = L.marker([location.lat, location.lng], { icon: markerIcon })
+                    .addTo(map)
+                    .on('click', () => showLocationCard(location));
+
+                marker.bindPopup(`
+                    <div class="popup-title">${location.emoji} ${location.name}</div>
+                    <div class="popup-date">${location.date}</div>
+                `);
+
+                markers.push({ marker, location });
+            });
+
+            // Ajuster la vue pour voir tous les marqueurs
+            map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
+        }
+
+        // Afficher la carte de localisation
+        function showLocationCard(location) {
+            const card = document.getElementById('locationCard');
+            document.getElementById('cardTitle').textContent = location.name;
+            document.getElementById('cardCountry').textContent = location.country;
+            document.getElementById('cardDate').textContent = location.date;
+            
+            card.classList.add('active');
+            
+            // Centrer la carte sur le lieu
+            map.setView([location.lat, location.lng], 10);
+        }
+
+        // Filtrer les locations
+        function filterLocations(type) {
+            // Mettre à jour les boutons actifs
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filtrer les marqueurs
+            markers.forEach(({ marker, location }) => {
+                if (type === 'all' || location.type === type) {
+                    marker.addTo(map);
+                } else {
+                    map.removeLayer(marker);
+                }
+            });
+        }
+
+        // Toggle timeline
+        function toggleTimeline() {
+            alert('Vue timeline - À venir !\nCette fonctionnalité affichera une chronologie du voyage.');
+        }
+
+        // Explorer une location
+        function exploreLocation() {
+            alert('Ouverture de la page détaillée du pays\n\nCette page contiendrait:\n• Photos et vidéos\n• Podcasts\n• Interviews\n• Défis réalisés');
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Initialiser la carte au chargement
+        window.onload = initMap;
+    </script>
+</body>
+</html>

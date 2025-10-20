@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Données</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 12px 24px 18px;
+            text-align: center;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2B2B2B;
+            letter-spacing: -0.7px;
+        }
+
+        .content {
+            padding: 0 0 120px;
+        }
+
+        .mind-map-container {
+            background: white;
+            margin: 24px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            min-height: 400px;
+            position: relative;
+        }
+
+        .mind-map-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #2B2B2B;
+        }
+
+        .mind-map {
+            position: relative;
+            height: 350px;
+        }
+
+        .central-bubble {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 6px 24px rgba(127, 182, 194, 0.4);
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .central-bubble:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(127, 182, 194, 0.3), rgba(127, 182, 194, 0.1));
+            transform-origin: left center;
+        }
+
+        .line-1 { top: 48%; left: 50%; width: 80px; transform: rotate(-45deg); }
+        .line-2 { top: 30%; left: 50%; width: 70px; transform: rotate(-10deg); }
+        .line-3 { top: 30%; left: 50%; width: 70px; transform: rotate(10deg); }
+        .line-4 { top: 48%; left: 50%; width: 80px; transform: rotate(45deg); }
+        .line-5 { top: 70%; left: 30%; width: 60px; transform: rotate(-20deg); }
+        .line-6 { top: 70%; left: 50%; width: 60px; transform: rotate(20deg); }
+
+        .satellite-bubble {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .satellite-bubble:active {
+            transform: scale(0.95);
+        }
+
+        .bubble-1 { top: 10%; left: 10%; background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%); }
+        .bubble-2 { top: 5%; left: 45%; background: linear-gradient(135deg, #C5E0C2 0%, #9FD3A0 100%); }
+        .bubble-3 { top: 10%; right: 10%; background: linear-gradient(135deg, #F7B5A0 0%, #E89A8C 100%); }
+        .bubble-4 { top: 48%; right: 5%; background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%); }
+        .bubble-5 { bottom: 10%; left: 5%; background: linear-gradient(135deg, #9FD3A0 0%, #7FB6C2 100%); }
+        .bubble-6 { bottom: 10%; right: 12%; background: linear-gradient(135deg, #FFE79A 0%, #C5E0C2 100%); }
+
+        .section-title {
+            padding: 24px 24px 12px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #2B2B2B;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 24px 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:active {
+            transform: scale(0.98);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #C5E0C2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2B2B2B;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+            margin: 0 24px 24px;
+            border-radius: 24px;
+            padding: 24px;
+            color: white;
+            box-shadow: 0 4px 24px rgba(127, 182, 194, 0.3);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .insight-card:active {
+            transform: scale(0.98);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .insight-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .insight-text {
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .insight-highlight {
+            background: rgba(255, 231, 154, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .chart-card {
+            background: white;
+            margin: 0 24px 24px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2B2B2B;
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .bar-item:active {
+            transform: scale(0.98);
+        }
+
+        .bar-label {
+            width: 80px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2B2B2B;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 32px;
+            background: #F0F0F0;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7FB6C2 0%, #5A9AB8 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            transition: width 0.8s ease;
+        }
+
+        .word-cloud {
+            background: white;
+            margin: 0 24px 24px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .cloud-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2B2B2B;
+        }
+
+        .cloud-words {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .cloud-word {
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .cloud-word:active {
+            transform: scale(0.95);
+        }
+
+        .word-large {
+            font-size: 24px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+        }
+
+        .word-medium {
+            font-size: 18px;
+            background: linear-gradient(135deg, #C5E0C2 0%, #9FD3A0 100%);
+        }
+
+        .word-small {
+            font-size: 14px;
+            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+        }
+
+        .comparison-card {
+            background: white;
+            margin: 0 24px 24px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2B2B2B;
+        }
+
+        .comparison-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #F7F8F9;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .comparison-row:active {
+            transform: scale(0.98);
+        }
+
+        .comparison-country {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .comparison-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #7FB6C2;
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        @keyframes pulse-bubble {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .satellite-bubble:hover {
+            animation: pulse-bubble 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-title">Données du voyage</div>
+            </div>
+
+            <div class="content">
+                <div class="mind-map-container">
+                    <div class="mind-map-title">🧠 Carte mentale des questions</div>
+                    <div class="mind-map">
+                        <div class="connection-line line-1"></div>
+                        <div class="connection-line line-2"></div>
+                        <div class="connection-line line-3"></div>
+                        <div class="connection-line line-4"></div>
+                        <div class="connection-line line-5"></div>
+                        <div class="connection-line line-6"></div>
+
+                        <div class="central-bubble" onclick="exploreMindMap('center')">Questions du voyage</div>
+
+                        <div class="satellite-bubble bubble-1" onclick="exploreMindMap('travail')">💼<br>Travail</div>
+                        <div class="satellite-bubble bubble-2" onclick="exploreMindMap('liberte')">🌟<br>Liberté</div>
+                        <div class="satellite-bubble bubble-3" onclick="exploreMindMap('famille')">👨‍👩‍👧<br>Famille</div>
+                        <div class="satellite-bubble bubble-4" onclick="exploreMindMap('bonheur')">😊<br>Bonheur</div>
+                        <div class="satellite-bubble bubble-5" onclick="exploreMindMap('habitat')">🏡<br>Habitat</div>
+                        <div class="satellite-bubble bubble-6" onclick="exploreMindMap('culture')">🎭<br>Culture</div>
+                    </div>
+                </div>
+
+                <div class="insight-card" onclick="viewInsightDetails()">
+                    <div class="insight-header">
+                        <div class="insight-icon">💡</div>
+                        <div class="insight-title">Insight principal</div>
+                    </div>
+                    <div class="insight-text">
+                        Le bonheur obtient <span class="insight-highlight">62% de réponses positives</span> chez les +30 ans en Europe du Sud, contre 48% en Europe du Nord.
+                    </div>
+                </div>
+
+                <div class="section-title">📊 Statistiques du voyage</div>
+
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="viewStat('pays')">
+                        <div class="stat-icon">🗺️</div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Pays visités</div>
+                    </div>
+
+                    <div class="stat-card" onclick="viewStat('interviews')">
+                        <div class="stat-icon">🎤</div>
+                        <div class="stat-value">247</div>
+                        <div class="stat-label">Interviews</div>
+                    </div>
+
+                    <div class="stat-card" onclick="viewStat('questions')">
+                        <div class="stat-icon">❓</div>
+                        <div class="stat-value">89</div>
+                        <div class="stat-label">Questions posées</div>
+                    </div>
+
+                    <div class="stat-card" onclick="viewStat('photos')">
+                        <div class="stat-icon">📸</div>
+                        <div class="stat-value">1.2k</div>
+                        <div class="stat-label">Photos prises</div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-title">📈 Réponses par thème</div>
+                    <div class="bar-chart">
+                        <div class="bar-item" onclick="viewThemeDetails('bonheur')">
+                            <div class="bar-label">Bonheur</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 85%;">85%</div>
+                            </div>
+                        </div>
+                        <div class="bar-item" onclick="viewThemeDetails('famille')">
+                            <div class="bar-label">Famille</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 72%;">72%</div>
+                            </div>
+                        </div>
+                        <div class="bar-item" onclick="viewThemeDetails('travail')">
+                            <div class="bar-label">Travail</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 65%;">65%</div>
+                            </div>
+                        </div>
+                        <div class="bar-item" onclick="viewThemeDetails('liberte')">
+                            <div class="bar-label">Liberté</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" style="width: 78%;">78%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="comparison-title">🌍 Comparaison par pays</div>
+                    <div class="comparison-row" onclick="viewCountryData('ES')">
+                        <div class="comparison-country">
+                            <span>🇪🇸</span>
+                            <span>Espagne</span>
+                        </div>
+                        <div class="comparison-value">67 interviews</div>
+                    </div>
+                    <div class="comparison-row" onclick="viewCountryData('FR')">
+                        <div class="comparison-country">
+                            <span>🇫🇷</span>
+                            <span>France</span>
+                        </div>
+                        <div class="comparison-value">54 interviews</div>
+                    </div>
+                    <div class="comparison-row" onclick="viewCountryData('IT')">
+                        <div class="comparison-country">
+                            <span>🇮🇹</span>
+                            <span>Italie</span>
+                        </div>
+                        <div class="comparison-value">42 interviews</div>
+                    </div>
+                    <div class="comparison-row" onclick="viewCountryData('PT')">
+                        <div class="comparison-country">
+                            <span>🇵🇹</span>
+                            <span>Portugal</span>
+                        </div>
+                        <div class="comparison-value">38 interviews</div>
+                    </div>
+                </div>
+
+                <div class="word-cloud">
+                    <div class="cloud-title">☁️ Mots les plus cités</div>
+                    <div class="cloud-words">
+                        <span class="cloud-word word-large" onclick="exploreWord('Passion')">Passion</span>
+                        <span class="cloud-word word-small" onclick="exploreWord('Temps')">Temps</span>
+                        <span class="cloud-word word-medium" onclick="exploreWord('Liberté')">Liberté</span>
+                        <span class="cloud-word word-small" onclick="exploreWord('Argent')">Argent</span>
+                        <span class="cloud-word word-large" onclick="exploreWord('Famille')">Famille</span>
+                        <span class="cloud-word word-medium" onclick="exploreWord('Rêves')">Rêves</span>
+                        <span class="cloud-word word-small" onclick="exploreWord('Voyage')">Voyage</span>
+                        <span class="cloud-word word-medium" onclick="exploreWord('Amour')">Amour</span>
+                        <span class="cloud-word word-small" onclick="exploreWord('Nature')">Nature</span>
+                        <span class="cloud-word word-medium" onclick="exploreWord('Tradition')">Tradition</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('profile')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function exploreMindMap(topic) {
+            const topics = {
+                'center': 'Toutes les questions du voyage',
+                'travail': 'Questions sur le travail',
+                'liberte': 'Questions sur la liberté',
+                'famille': 'Questions sur la famille',
+                'bonheur': 'Questions sur le bonheur',
+                'habitat': 'Questions sur l\'habitat',
+                'culture': 'Questions sur la culture'
+            };
+            
+            alert(`🧠 ${topics[topic]}\n\nCette page afficherait:\n• Toutes les questions du thème\n• Les réponses par pays\n• Les tendances identifiées\n• Les interviews associées`);
+        }
+
+        function viewInsightDetails() {
+            alert('💡 Insight détaillé\n\nCette page afficherait:\n• L\'analyse complète\n• Les graphiques comparatifs\n• Les témoignages illustrant l\'insight\n• Les variations géographiques');
+        }
+
+        function viewStat(type) {
+            const stats = {
+                'pays': 'Liste des 12 pays visités avec dates et durées',
+                'interviews': '247 interviews réalisées avec extraits audio',
+                'questions': '89 questions posées aux habitants',
+                'photos': '1.2k photos organisées par lieu et date'
+            };
+            
+            alert(`📊 ${type.charAt(0).toUpperCase() + type.slice(1)}\n\n${stats[type]}`);
+        }
+
+        function viewThemeDetails(theme) {
+            alert(`📈 Thème: ${theme.charAt(0).toUpperCase() + theme.slice(1)}\n\nCette page afficherait:\n• Toutes les réponses sur ce thème\n• Variations par pays/âge/genre\n• Citations marquantes\n• Podcasts associés`);
+        }
+
+        function viewCountryData(country) {
+            const countries = {
+                'ES': 'Espagne - 67 interviews',
+                'FR': 'France - 54 interviews',
+                'IT': 'Italie - 42 interviews',
+                'PT': 'Portugal - 38 interviews'
+            };
+            
+            alert(`🌍 ${countries[country]}\n\nCette page afficherait:\n• Toutes les interviews du pays\n• Les thèmes principaux\n• La carte des lieux visités\n• Les photos et podcasts`);
+        }
+
+        function exploreWord(word) {
+            alert(`☁️ "${word}"\n\nCette page afficherait:\n• Toutes les citations contenant ce mot\n• Fréquence par pays\n• Contextes d'utilisation\n• Interviews associées`);
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Animation des barres au chargement
+        window.addEventListener('load', () => {
+            const bars = document.querySelectorAll('.bar-fill');
+            bars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
