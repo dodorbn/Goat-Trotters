@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Défis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 12px 24px 0;
+            text-align: center;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2B2B2B;
+            letter-spacing: -0.7px;
+            margin-bottom: 16px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.8);
+            position: sticky;
+            top: 108px;
+            z-index: 98;
+            padding: 0 24px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .tab:active {
+            transform: scale(0.98);
+        }
+
+        .tab.active {
+            color: #7FB6C2;
+            border-bottom-color: #7FB6C2;
+        }
+
+        .search-bar {
+            padding: 16px 24px;
+            background: white;
+        }
+
+        .search-input-wrapper {
+            background: #F0F0F0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            padding: 0 24px 16px;
+            overflow-x: auto;
+            background: white;
+        }
+
+        .filter-pills::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pill {
+            background: #F0F0F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            white-space: nowrap;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill:active {
+            transform: scale(0.95);
+        }
+
+        .pill.active {
+            background: #7FB6C2;
+            color: white;
+        }
+
+        .content {
+            padding: 0 0 120px;
+        }
+
+        .section-header {
+            padding: 20px 24px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .sort-button {
+            font-size: 14px;
+            color: #7FB6C2;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .sort-button:active {
+            transform: scale(0.95);
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 20px;
+            margin: 12px 24px;
+            padding: 18px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .question-card:active {
+            transform: scale(0.98);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .question-country {
+            display: inline-block;
+            background: #FFE79A;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .vote-count {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #7FB6C2;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2B2B2B;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .challenge-card {
+            background: white;
+            border-radius: 20px;
+            margin: 12px 24px;
+            padding: 20px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            border-left: 5px solid #7FB6C2;
+            transition: transform 0.2s;
+        }
+
+        .challenge-card:active {
+            transform: scale(0.98);
+        }
+
+        .challenge-card.completed {
+            border-left-color: #9FD3A0;
+            background: linear-gradient(135deg, rgba(159, 211, 160, 0.05) 0%, white 100%);
+        }
+
+        .challenge-card.in-progress {
+            border-left-color: #FFE79A;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+        }
+
+        .challenge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-todo {
+            background: #F0F0F0;
+            color: #666;
+        }
+
+        .status-progress {
+            background: #FFF4D6;
+            color: #B8860B;
+        }
+
+        .status-done {
+            background: #E6F7E6;
+            color: #2D7A2D;
+        }
+
+        .challenge-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #2B2B2B;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .challenge-country-tag {
+            display: inline-block;
+            background: #C5E0C2;
+            color: #2B2B2B;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .challenge-author {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 14px;
+        }
+
+        .challenge-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vote-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: #F0F0F0;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vote-button:active {
+            transform: scale(0.95);
+        }
+
+        .vote-button.voted {
+            background: #7FB6C2;
+            color: white;
+        }
+
+        .watch-link {
+            color: #7FB6C2;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .fab-button {
+            position: fixed;
+            bottom: 150px;
+            right: calc(50% - 196px + 30px);
+            width: 60px;
+            height: 60px;
+            background: #7FB6C2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 24px rgba(127, 182, 194, 0.4);
+            z-index: 500;
+            cursor: pointer;
+            transition: transform 0.2s;
+            color: white;
+        }
+
+        .fab-button:active {
+            transform: scale(0.95);
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        /* Modal pour nouveau défi */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 340px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease-out;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2B2B2B;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #F0F0F0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: #7FB6C2;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal-btn-cancel {
+            background: #F0F0F0;
+            color: #666;
+        }
+
+        .modal-btn-submit {
+            background: #7FB6C2;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-title">Questions & Défis</div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab" onclick="switchTab('questions')">Questions</div>
+                <div class="tab active" onclick="switchTab('challenges')">Défis</div>
+            </div>
+
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <span>🔍</span>
+                    <input type="text" class="search-input" placeholder="Rechercher un défi..." id="searchInput" oninput="searchChallenges()">
+                </div>
+            </div>
+
+            <div class="filter-pills" id="filterPills">
+                <button class="pill active" onclick="filterByCountry('all')">🌍 Tous</button>
+                <button class="pill" onclick="filterByCountry('ES')">🇪🇸 Espagne</button>
+                <button class="pill" onclick="filterByCountry('FR')">🇫🇷 France</button>
+                <button class="pill" onclick="filterByCountry('IT')">🇮🇹 Italie</button>
+                <button class="pill" onclick="filterByCountry('PT')">🇵🇹 Portugal</button>
+                <button class="pill" onclick="filterByCountry('GR')">🇬🇷 Grèce</button>
+            </div>
+
+            <!-- Questions Section -->
+            <div id="questionsSection" class="hidden">
+                <div class="section-header">
+                    <div class="section-title">Questions populaires</div>
+                    <div class="sort-button" onclick="sortQuestions()">⇅ Trier</div>
+                </div>
+
+                <div class="question-card" onclick="viewQuestion(1)">
+                    <div class="question-header">
+                        <span class="question-country">🇪🇸 Espagne</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>342</span>
+                        </div>
+                    </div>
+                    <div class="question-text">Qu'est-ce qui vous rend heureux au quotidien ?</div>
+                    <div class="question-meta">
+                        <span>Par @Maria_BCN</span>
+                        <span>•</span>
+                        <span>89 réponses</span>
+                    </div>
+                </div>
+
+                <div class="question-card" onclick="viewQuestion(2)">
+                    <div class="question-header">
+                        <span class="question-country">🇫🇷 France</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>287</span>
+                        </div>
+                    </div>
+                    <div class="question-text">Comment définiriez-vous la liberté ?</div>
+                    <div class="question-meta">
+                        <span>Par @Pierre_Lyon</span>
+                        <span>•</span>
+                        <span>67 réponses</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Challenges Section -->
+            <div id="challengesSection" class="content">
+                <div class="section-header">
+                    <div class="section-title">Défis populaires</div>
+                    <div class="sort-button" onclick="sortChallenges()">⇅ Trier</div>
+                </div>
+
+                <div class="challenge-card completed" data-country="ES" data-status="completed">
+                    <div class="challenge-header">
+                        <span class="challenge-status status-done">✓ Réalisé</span>
+                    </div>
+                    <div class="challenge-title">Apprenez une danse traditionnelle locale</div>
+                    <span class="challenge-country-tag">🇪🇸 Espagne</span>
+                    <div class="challenge-author">Proposé par @Maria_87</div>
+                    <div class="challenge-footer">
+                        <button class="vote-button voted" onclick="toggleVote(event)">👍 247</button>
+                        <a href="#" class="watch-link" onclick="watchVideo(event)">🎬 Voir la vidéo</a>
+                    </div>
+                </div>
+
+                <div class="challenge-card in-progress" data-country="PT" data-status="progress">
+                    <div class="challenge-header">
+                        <span class="challenge-status status-progress">⏳ En cours</span>
+                    </div>
+                    <div class="challenge-title">Goûtez un plat typique jamais essayé auparavant</div>
+                    <span class="challenge-country-tag">🇵🇹 Portugal</span>
+                    <div class="challenge-author">Proposé par @FoodLover_23</div>
+                    <div class="challenge-footer">
+                        <button class="vote-button voted" onclick="toggleVote(event)">👍 189</button>
+                        <a href="#" class="watch-link" onclick="watchVideo(event)">📸 Photos</a>
+                    </div>
+                </div>
+
+                <div class="challenge-card" data-country="IT" data-status="todo">
+                    <div class="challenge-header">
+                        <span class="challenge-status status-todo">À faire</span>
+                    </div>
+                    <div class="challenge-title">Participez à une fête locale ou un festival de village</div>
+                    <span class="challenge-country-tag">🇮🇹 Italie</span>
+                    <div class="challenge-author">Proposé par @TravelBug_Italia</div>
+                    <div class="challenge-footer">
+                        <button class="vote-button" onclick="toggleVote(event)">👍 156</button>
+                        <span style="color: #999; font-size: 13px;">342 votes</span>
+                    </div>
+                </div>
+
+                <div class="challenge-card" data-country="FR" data-status="todo">
+                    <div class="challenge-header">
+                        <span class="challenge-status status-todo">À faire</span>
+                    </div>
+                    <div class="challenge-title">Dormez une nuit dans un lieu insolite</div>
+                    <span class="challenge-country-tag">🇫🇷 France</span>
+                    <div class="challenge-author">Proposé par @AdventureSeeker</div>
+                    <div class="challenge-footer">
+                        <button class="vote-button" onclick="toggleVote(event)">👍 134</button>
+                        <span style="color: #999; font-size: 13px;">289 votes</span>
+                    </div>
+                </div>
+
+                <div class="challenge-card" data-country="GR" data-status="todo">
+                    <div class="challenge-header">
+                        <span class="challenge-status status-todo">À faire</span>
+                    </div>
+                    <div class="challenge-title">Apprenez 10 mots dans la langue locale</div>
+                    <span class="challenge-country-tag">🇬🇷 Grèce</span>
+                    <div class="challenge-author">Proposé par @PolyglotTraveler</div>
+                    <div class="challenge-footer">
+                        <button class="vote-button" onclick="toggleVote(event)">👍 98</button>
+                        <span style="color: #999; font-size: 13px;">203 votes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fab-button" onclick="openNewChallengeModal()">
+                ➕
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('data')">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('profile')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nouveau Défi -->
+    <div class="modal" id="newChallengeModal">
+        <div class="modal-content">
+            <div class="modal-header">➕ Proposer un défi</div>
+            <form onsubmit="submitChallenge(event)">
+                <div class="form-group">
+                    <label class="form-label">Titre du défi</label>
+                    <input type="text" class="form-input" placeholder="Ex: Goûtez une spécialité locale" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" placeholder="Décrivez votre défi en détail..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pays</label>
+                    <select class="form-select" required>
+                        <option value="">Sélectionnez un pays</option>
+                        <option value="ES">🇪🇸 Espagne</option>
+                        <option value="FR">🇫🇷 France</option>
+                        <option value="IT">🇮🇹 Italie</option>
+                        <option value="PT">🇵🇹 Portugal</option>
+                        <option value="GR">🇬🇷 Grèce</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="modal-btn modal-btn-submit">Publier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentFilter = 'all';
+        let currentTab = 'challenges';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'questions') {
+                document.getElementById('questionsSection').classList.remove('hidden');
+                document.getElementById('challengesSection').classList.add('hidden');
+            } else {
+                document.getElementById('questionsSection').classList.add('hidden');
+                document.getElementById('challengesSection').classList.remove('hidden');
+            }
+        }
+
+        function filterByCountry(country) {
+            currentFilter = country;
+            
+            // Update active pill
+            document.querySelectorAll('.pill').forEach(pill => pill.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter challenges
+            const challenges = document.querySelectorAll('.challenge-card');
+            challenges.forEach(card => {
+                const cardCountry = card.getAttribute('data-country');
+                if (country === 'all' || cardCountry === country) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchChallenges() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const challenges = document.querySelectorAll('.challenge-card');
+            
+            challenges.forEach(card => {
+                const title = card.querySelector('.challenge-title').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleVote(event) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            const wasVoted = button.classList.contains('voted');
+            
+            button.classList.toggle('voted');
+            
+            // Update vote count
+            const voteText = button.textContent;
+            const currentVotes = parseInt(voteText.match(/\d+/)[0]);
+            const newVotes = wasVoted ? currentVotes - 1 : currentVotes + 1;
+            button.textContent = `👍 ${newVotes}`;
+        }
+
+        function watchVideo(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            alert('Ouverture de la vidéo/galerie du défi\n\nCette page montrerait:\n• Vidéo de la réalisation\n• Photos\n• Récit du défi');
+        }
+
+        function viewQuestion(id) {
+            alert(`Ouverture de la question #${id}\n\nCette page afficherait:\n• La question complète\n• Toutes les réponses\n• Possibilité de répondre`);
+        }
+
+        function sortChallenges() {
+            alert('Tri des défis\n\nOptions:\n• Plus votés\n• Plus récents\n• Réalisés\n• En cours');
+        }
+
+        function sortQuestions() {
+            alert('Tri des questions\n\nOptions:\n• Plus votées\n• Plus récentes\n• Plus de réponses');
+        }
+
+        function openNewChallengeModal() {
+            document.getElementById('newChallengeModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('newChallengeModal').classList.remove('active');
+        }
+
+        function submitChallenge(event) {
+            event.preventDefault();
+            alert('✅ Défi soumis avec succès!\n\nVotre défi sera visible dans quelques instants après validation par les Goat Trotters.');
+            closeModal();
+            event.target.reset();
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('newChallengeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

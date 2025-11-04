@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Podcast</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .dynamic-island:active {
+            transform: translateX(-50%) scale(0.98);
+        }
+
+        .island-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .island-artwork {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #FFE79A 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .island-waveform {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: #7FB6C2;
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+        .wave-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { height: 10px; animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { height: 12px; animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+        }
+
+        .island-play {
+            color: white;
+            font-size: 16px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 12px 24px 18px;
+            text-align: center;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2B2B2B;
+            letter-spacing: -0.7px;
+        }
+
+        .content {
+            padding: 0 0 120px;
+        }
+
+        .now-playing {
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+            margin: 24px;
+            border-radius: 24px;
+            padding: 24px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(127, 182, 194, 0.3);
+        }
+
+        .now-playing-label {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .album-art {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        .album-art-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .episode-info {
+            margin-bottom: 20px;
+        }
+
+        .episode-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .episode-location {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            margin-bottom: 12px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-bottom: 8px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 40%;
+            background: white;
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+
+        .progress-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            font-size: 32px;
+            color: white;
+            opacity: 0.9;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn.play {
+            font-size: 56px;
+            opacity: 1;
+        }
+
+        .section-title {
+            padding: 24px 24px 12px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #2B2B2B;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            padding: 0 24px 16px;
+            overflow-x: auto;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-tab {
+            background: #F0F0F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:active {
+            transform: scale(0.95);
+        }
+
+        .filter-tab.active {
+            background: #7FB6C2;
+            color: white;
+        }
+
+        .episode-list {
+            padding: 0 24px;
+        }
+
+        .episode-card {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .episode-card:active {
+            transform: scale(0.98);
+        }
+
+        .episode-thumbnail {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .episode-thumbnail-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .episode-thumbnail.spain {
+            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+        }
+
+        .episode-thumbnail.france {
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+        }
+
+        .episode-thumbnail.portugal {
+            background: linear-gradient(135deg, #F7B5A0 0%, #E89A8C 100%);
+        }
+
+        .episode-details {
+            flex: 1;
+        }
+
+        .episode-country {
+            display: inline-block;
+            background: #FFE79A;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #2B2B2B;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .episode-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2B2B2B;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .episode-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        .episode-duration {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .map-link-section {
+            background: white;
+            margin: 24px;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .map-link-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2B2B2B;
+        }
+
+        .map-link-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .map-button {
+            width: 100%;
+            padding: 14px;
+            background: #7FB6C2;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .map-button:active {
+            transform: scale(0.98);
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .playing {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island" onclick="togglePlayer()">
+            <div class="island-left">
+                <div class="island-artwork">🎧</div>
+                <div class="island-waveform" id="waveform">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                </div>
+            </div>
+            <div class="island-play" id="islandPlayBtn">⏸️</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-title">Podcasts</div>
+            </div>
+
+            <div class="content">
+                <div class="now-playing">
+                    <div class="now-playing-label">🎧 En lecture</div>
+                    <div class="album-art">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop" alt="Andorre" class="album-art-image">
+                    </div>
+                    <div class="episode-info">
+                        <div class="episode-title">Les bergers d'Andorre</div>
+                        <div class="episode-location">📍 Andorre-la-Vieille, Andorre</div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" onclick="seekTo(event)">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-time">
+                            <span id="currentTime">8:24</span>
+                            <span id="totalTime">21:15</span>
+                        </div>
+                    </div>
+                    <div class="player-controls">
+                        <button class="control-btn" onclick="previousTrack()">⏮️</button>
+                        <button class="control-btn" onclick="rewind()">⏪</button>
+                        <button class="control-btn play" id="playBtn" onclick="togglePlay()">⏸️</button>
+                        <button class="control-btn" onclick="forward()">⏩</button>
+                        <button class="control-btn" onclick="nextTrack()">⏭️</button>
+                    </div>
+                </div>
+
+                <div class="map-link-section">
+                    <div class="map-link-title">🗺️ Explorer ce lieu</div>
+                    <div class="map-link-text">
+                        Découvrez Andorre sur la carte interactive avec des photos, vidéos et témoignages des habitants.
+                    </div>
+                    <button class="map-button" onclick="navigateTo('map')">
+                        <span>📍</span>
+                        <span>Voir sur la carte</span>
+                    </button>
+                </div>
+
+                <div class="section-title">Tous les épisodes</div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterEpisodes('all')">🌍 Tous les pays</button>
+                    <button class="filter-tab" onclick="filterEpisodes('interview')">🎤 Interviews</button>
+                    <button class="filter-tab" onclick="filterEpisodes('culture')">🎭 Culture</button>
+                    <button class="filter-tab" onclick="filterEpisodes('food')">🍽️ Gastronomie</button>
+                </div>
+
+                <div class="episode-list">
+                    <div class="episode-card" data-category="culture" onclick="playEpisode('barcelona')">
+                        <div class="episode-thumbnail spain">
+                            <img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?w=200&h=200&fit=crop" alt="Barcelone" class="episode-thumbnail-image">
+                            <div class="play-overlay">▶️</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-country">🇪🇸 Espagne</span>
+                            <div class="episode-card-title">La vie nocturne à Barcelone</div>
+                            <div class="episode-meta">
+                                <span class="episode-duration">🎧 18 min</span>
+                                <span>•</span>
+                                <span>13 Oct 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="episode-card" data-category="food" onclick="playEpisode('bordeaux')">
+                        <div class="episode-thumbnail france">
+                            <img src="https://images.unsplash.com/photo-1474279174859-19a88b2d72fa?w=200&h=200&fit=crop" alt="Bordeaux" class="episode-thumbnail-image">
+                            <div class="play-overlay">▶️</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-country">🇫🇷 France</span>
+                            <div class="episode-card-title">Les vignerons de Bordeaux</div>
+                            <div class="episode-meta">
+                                <span class="episode-duration">🎧 24 min</span>
+                                <span>•</span>
+                                <span>10 Oct 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="episode-card" data-category="interview" onclick="playEpisode('porto')">
+                        <div class="episode-thumbnail portugal">
+                            <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=200&h=200&fit=crop" alt="Porto" class="episode-thumbnail-image">
+                            <div class="play-overlay">▶️</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-country">🇵🇹 Portugal</span>
+                            <div class="episode-card-title">Pêcheurs traditionnels de Porto</div>
+                            <div class="episode-meta">
+                                <span class="episode-duration">🎧 15 min</span>
+                                <span>•</span>
+                                <span>07 Oct 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="episode-card" data-category="culture" onclick="playEpisode('valence')">
+                        <div class="episode-thumbnail spain">
+                            <img src="https://images.unsplash.com/photo-1562883676-8c7feb83f09b?w=200&h=200&fit=crop" alt="Valence" class="episode-thumbnail-image">
+                            <div class="play-overlay">▶️</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-country">🇪🇸 Espagne</span>
+                            <div class="episode-card-title">Le flamenco à Valence</div>
+                            <div class="episode-meta">
+                                <span class="episode-duration">🎧 20 min</span>
+                                <span>•</span>
+                                <span>04 Oct 2025</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="episode-card" data-category="food" onclick="playEpisode('toulouse')">
+                        <div class="episode-thumbnail france">
+                            <img src="https://images.unsplash.com/photo-1541591022210-e5e1d8d1f0b1?w=200&h=200&fit=crop" alt="Toulouse" class="episode-thumbnail-image">
+                            <div class="play-overlay">▶️</div>
+                        </div>
+                        <div class="episode-details">
+                            <span class="episode-country">🇫🇷 France</span>
+                            <div class="episode-card-title">Boulangeries artisanales toulousaines</div>
+                            <div class="episode-meta">
+                                <span class="episode-duration">🎧 16 min</span>
+                                <span>•</span>
+                                <span>01 Oct 2025</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('profile')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPlaying = true;
+        let currentProgress = 40; // 40% of 21:15 = 8:24
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const playBtn = document.getElementById('playBtn');
+            const islandPlayBtn = document.getElementById('islandPlayBtn');
+            const waveform = document.getElementById('waveform');
+            
+            if (isPlaying) {
+                playBtn.textContent = '⏸️';
+                islandPlayBtn.textContent = '⏸️';
+                waveform.classList.add('playing');
+            } else {
+                playBtn.textContent = '▶️';
+                islandPlayBtn.textContent = '▶️';
+                waveform.classList.remove('playing');
+            }
+        }
+
+        function togglePlayer() {
+            togglePlay();
+        }
+
+        function rewind() {
+            currentProgress = Math.max(0, currentProgress - 5);
+            updateProgress();
+            alert('⏪ Retour de 15 secondes');
+        }
+
+        function forward() {
+            currentProgress = Math.min(100, currentProgress + 5);
+            updateProgress();
+            alert('⏩ Avance de 15 secondes');
+        }
+
+        function previousTrack() {
+            alert('⏮️ Épisode précédent\n\nLecture de: Boulangeries artisanales toulousaines');
+        }
+
+        function nextTrack() {
+            alert('⏭️ Épisode suivant\n\nLecture de: La vie nocturne à Barcelone');
+        }
+
+        function seekTo(event) {
+            const progressBar = event.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            currentProgress = Math.max(0, Math.min(100, percentage));
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = currentProgress + '%';
+            
+            // Update time (21:15 total)
+            const totalSeconds = 21 * 60 + 15;
+            const currentSeconds = Math.floor((currentProgress / 100) * totalSeconds);
+            const minutes = Math.floor(currentSeconds / 60);
+            const seconds = currentSeconds % 60;
+            document.getElementById('currentTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function filterEpisodes(category) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter episodes
+            const episodes = document.querySelectorAll('.episode-card');
+            episodes.forEach(episode => {
+                const episodeCategory = episode.getAttribute('data-category');
+                if (category === 'all' || episodeCategory === category) {
+                    episode.style.display = 'flex';
+                } else {
+                    episode.style.display = 'none';
+                }
+            });
+        }
+
+        function playEpisode(location) {
+            const episodes = {
+                'barcelona': 'La vie nocturne à Barcelone',
+                'bordeaux': 'Les vignerons de Bordeaux',
+                'porto': 'Pêcheurs traditionnels de Porto',
+                'valence': 'Le flamenco à Valence',
+                'toulouse': 'Boulangeries artisanales toulousaines'
+            };
+            
+            alert(`🎧 Lecture de:\n${episodes[location]}\n\nLe lecteur se met à jour avec ce nouvel épisode.`);
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Simulate progress
+        setInterval(() => {
+            if (isPlaying && currentProgress < 100) {
+                currentProgress += 0.1;
+                updateProgress();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

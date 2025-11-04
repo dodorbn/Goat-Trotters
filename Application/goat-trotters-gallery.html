@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Galerie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 12px 24px 18px;
+            text-align: center;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2B2B2B;
+            letter-spacing: -0.7px;
+        }
+
+        .filter-bar {
+            background: white;
+            padding: 12px 24px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            position: sticky;
+            top: 122px;
+            z-index: 98;
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            background: #F0F0F0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .filter-btn.active {
+            background: #7FB6C2;
+            color: white;
+        }
+
+        .content {
+            padding: 0 0 120px;
+        }
+
+        .section-title {
+            padding: 24px 24px 12px;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #2B2B2B;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 24px 24px;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .gallery-item:active {
+            transform: scale(0.98);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            overflow: hidden;
+        }
+
+        .gallery-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            padding: 12px;
+            color: white;
+        }
+
+        .gallery-location {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .gallery-date {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .bg-spain { background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%); }
+        .bg-andorra { background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%); }
+        .bg-france { background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%); }
+        .bg-portugal { background: linear-gradient(135deg, #F7B5A0 0%, #E89A8C 100%); }
+
+        .bts-section {
+            background: white;
+            margin: 24px 24px 0;
+            padding: 20px;
+            border-radius: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .bts-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .bts-card {
+            background: #F7F8F9;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .bts-card:active {
+            transform: scale(0.98);
+        }
+
+        .bts-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .bts-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .bts-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #FFE79A 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .bts-header-text {
+            flex: 1;
+        }
+
+        .bts-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2B2B2B;
+        }
+
+        .bts-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .bts-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .bts-podcast-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 10px;
+            background: #7FB6C2;
+            color: white;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .bts-podcast-btn:active {
+            transform: scale(0.98);
+        }
+
+        .timeline-section {
+            padding: 0 24px 24px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .timeline-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .timeline-view-all {
+            color: #7FB6C2;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #7FB6C2, #C5E0C2, #FFE79A);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .timeline-item:active {
+            transform: scale(0.98);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -33px;
+            top: 8px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 4px solid #7FB6C2;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .timeline-date {
+            font-size: 13px;
+            color: #7FB6C2;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .timeline-location {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2B2B2B;
+            margin-bottom: 6px;
+        }
+
+        .timeline-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 80%;
+            position: relative;
+        }
+
+        .lightbox-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .lightbox-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            color: white;
+        }
+
+        .lightbox-location {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .lightbox-date {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="header-title">Galerie</div>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterMedia('all')">📸 Tout</button>
+                <button class="filter-btn" onclick="filterMedia('photo')">🖼️ Photos</button>
+                <button class="filter-btn" onclick="filterMedia('video')">🎥 Vidéos</button>
+                <button class="filter-btn" onclick="filterMedia('audio')">🎧 Audio</button>
+            </div>
+
+            <div class="content">
+                <div class="section-title">Derniers souvenirs</div>
+
+                <div class="gallery-grid" id="galleryGrid">
+                    <div class="gallery-item" data-type="photo" onclick="openLightbox('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=800&fit=crop', 'Andorre', '16 Oct 2025')">
+                        <div class="gallery-image bg-andorra">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop" alt="Andorre" class="gallery-photo">
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-location">Andorre</div>
+                            <div class="gallery-date">16 Oct 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" data-type="video" onclick="openVideo('Barcelone')">
+                        <div class="gallery-image bg-spain">
+                            <img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?w=400&h=400&fit=crop" alt="Barcelone" class="gallery-photo">
+                            <div class="play-icon">▶️</div>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-location">Barcelone</div>
+                            <div class="gallery-date">13 Oct 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" data-type="photo" onclick="openLightbox('https://images.unsplash.com/photo-1474279174859-19a88b2d72fa?w=800&h=800&fit=crop', 'Bordeaux', '10 Oct 2025')">
+                        <div class="gallery-image bg-france">
+                            <img src="https://images.unsplash.com/photo-1474279174859-19a88b2d72fa?w=400&h=400&fit=crop" alt="Bordeaux" class="gallery-photo">
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-location">Bordeaux</div>
+                            <div class="gallery-date">10 Oct 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" data-type="photo" onclick="openLightbox('https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&h=800&fit=crop', 'Porto', '07 Oct 2025')">
+                        <div class="gallery-image bg-portugal">
+                            <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=400&h=400&fit=crop" alt="Porto" class="gallery-photo">
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-location">Porto</div>
+                            <div class="gallery-date">07 Oct 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" data-type="video" onclick="openVideo('Valence')">
+                        <div class="gallery-image bg-spain">
+                            <img src="https://images.unsplash.com/photo-1562883676-8c7feb83f09b?w=400&h=400&fit=crop" alt="Valence" class="gallery-photo">
+                            <div class="play-icon">▶️</div>
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-location">Valence</div>
+                            <div class="gallery-date">04 Oct 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="gallery-item" data-type="photo" onclick="openLightbox('https://images.unsplash.com/photo-1541591022210-e5e1d8d1f0b1?w=800&h=800&fit=crop', 'Toulouse', '01 Oct 2025')">
+                        <div class="gallery-image bg-france">
+                            <img src="https://images.unsplash.com/photo-1541591022210-e5e1d8d1f0b1?w=400&h=400&fit=crop" alt="Toulouse" class="gallery-photo">
+                        </div>
+                        <div class="gallery-overlay">
+                            <div class="gallery-location">Toulouse</div>
+                            <div class="gallery-date">01 Oct 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bts-section">
+                    <div class="bts-title">🎬 Coulisses du van</div>
+
+                    <div class="bts-card" onclick="openStory(1)">
+                        <div class="bts-header">
+                            <div class="bts-icon">😅</div>
+                            <div class="bts-header-text">
+                                <div class="bts-label">Petite galère mécanique</div>
+                                <div class="bts-date">Il y a 3 jours</div>
+                            </div>
+                        </div>
+                        <div class="bts-text">
+                            Le van a décidé de faire une pause non prévue en pleine montagne. Heureusement, un mécanicien local nous a dépannés avec le sourire !
+                        </div>
+                        <button class="bts-podcast-btn" onclick="playPodcast(event, 1)">🎧 Écouter l'histoire</button>
+                    </div>
+
+                    <div class="bts-card" onclick="openStory(2)">
+                        <div class="bts-header">
+                            <div class="bts-icon">🍳</div>
+                            <div class="bts-header-text">
+                                <div class="bts-label">Cuisine en van life</div>
+                                <div class="bts-date">Il y a 1 semaine</div>
+                            </div>
+                        </div>
+                        <div class="bts-text">
+                            Comment on réussit à préparer des repas gourmands dans 2m² ? On vous montre nos astuces et nos meilleurs fails culinaires !
+                        </div>
+                        <button class="bts-podcast-btn" onclick="playPodcast(event, 2)">🎧 Écouter l'épisode</button>
+                    </div>
+
+                    <div class="bts-card" onclick="openStory(3)">
+                        <div class="bts-header">
+                            <div class="bts-icon">🌙</div>
+                            <div class="bts-header-text">
+                                <div class="bts-label">Nuit insolite</div>
+                                <div class="bts-date">Il y a 2 semaines</div>
+                            </div>
+                        </div>
+                        <div class="bts-text">
+                            Dormir sous les étoiles dans les Pyrénées avec le bruit des cloches des chèvres en fond sonore... Un moment magique !
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-section">
+                    <div class="timeline-header">
+                        <div class="timeline-title">📍 Timeline du voyage</div>
+                        <div class="timeline-view-all" onclick="viewFullTimeline()">Tout voir ›</div>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item" onclick="viewTimelineLocation('Andorre')">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">16 Oct 2025</div>
+                                <div class="timeline-location">🏔️ Andorre-la-Vieille</div>
+                                <div class="timeline-text">Rencontre avec les bergers de montagne</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item" onclick="viewTimelineLocation('Barcelone')">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">13 Oct 2025</div>
+                                <div class="timeline-location">🌆 Barcelone</div>
+                                <div class="timeline-text">Exploration de la culture catalane</div>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item" onclick="viewTimelineLocation('Bordeaux')">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">10 Oct 2025</div>
+                                <div class="timeline-location">🍷 Bordeaux</div>
+                                <div class="timeline-text">Découverte des vignobles bordelais</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('profile')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <div class="lightbox-close" onclick="closeLightbox()">×</div>
+            <img id="lightboxImage" class="lightbox-image" src="" alt="">
+            <div class="lightbox-info">
+                <div class="lightbox-location" id="lightboxLocation"></div>
+                <div class="lightbox-date" id="lightboxDate"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterMedia(type) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Filter gallery items
+            const items = document.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                const itemType = item.getAttribute('data-type');
+                if (type === 'all' || itemType === type) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function openLightbox(imageSrc, location, date) {
+            document.getElementById('lightboxImage').src = imageSrc;
+            document.getElementById('lightboxLocation').textContent = location;
+            document.getElementById('lightboxDate').textContent = date;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function openVideo(location) {
+            alert(`🎥 Lecture de la vidéo\n\n${location}\n\nDans une vraie application, cela ouvrirait le lecteur vidéo avec la vidéo de ${location}.`);
+        }
+
+        function openStory(id) {
+            alert(`📖 Ouverture de l'histoire #${id}\n\nCette page afficherait:\n• Le récit complet\n• Photos et vidéos\n• Possibilité de commenter`);
+        }
+
+        function playPodcast(event, id) {
+            event.stopPropagation();
+            alert(`🎧 Lecture du podcast #${id}\n\nLe lecteur audio se lancerait avec l'épisode des coulisses.`);
+        }
+
+        function viewTimelineLocation(location) {
+            alert(`📍 ${location}\n\nCette page afficherait:\n• Toutes les photos/vidéos\n• Le podcast de cette étape\n• Les défis réalisés\n• Les témoignages récoltés`);
+        }
+
+        function viewFullTimeline() {
+            alert(`📅 Timeline complète\n\nAffichage chronologique de tout le voyage:\n• Toutes les étapes\n• Statistiques\n• Vue sur la carte`);
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Close lightbox with escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>

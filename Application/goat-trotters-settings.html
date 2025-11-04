@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Paramètres</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 12px 24px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+        }
+
+        .back-button {
+            font-size: 28px;
+            color: #7FB6C2;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .back-button:active {
+            transform: scale(0.9);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2B2B2B;
+            letter-spacing: -0.5px;
+        }
+
+        .header-spacer {
+            width: 28px;
+        }
+
+        .content {
+            padding: 0 0 120px;
+        }
+
+        .settings-section {
+            background: white;
+            margin: 24px 24px 0;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .section-header {
+            padding: 20px 20px 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 0.5px solid rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .setting-item:active {
+            background: #F7F8F9;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .setting-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .icon-blue { background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%); }
+        .icon-green { background: linear-gradient(135deg, #C5E0C2 0%, #9FD3A0 100%); }
+        .icon-yellow { background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%); }
+        .icon-purple { background: linear-gradient(135deg, #B8A8E0 0%, #9B8ACE 100%); }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2B2B2B;
+            margin-bottom: 2px;
+        }
+
+        .setting-subtitle {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .setting-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .setting-value {
+            font-size: 15px;
+            color: #999;
+        }
+
+        .arrow-icon {
+            font-size: 18px;
+            color: #999;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 51px;
+            height: 31px;
+        }
+
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E5E5EA;
+            transition: .3s;
+            border-radius: 31px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .toggle-input:checked + .toggle-slider {
+            background-color: #7FB6C2;
+        }
+
+        .toggle-input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .about-card {
+            background: white;
+            margin: 24px;
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .about-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #FFE79A 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 16px;
+            box-shadow: 0 6px 24px rgba(127, 182, 194, 0.3);
+            overflow: hidden;
+        }
+
+        .about-logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .about-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2B2B2B;
+            margin-bottom: 8px;
+        }
+
+        .about-version {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .about-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 48px;
+            height: 48px;
+            background: #F7F8F9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .social-icon:active {
+            transform: scale(0.95);
+            background: #7FB6C2;
+        }
+
+        .logout-section {
+            padding: 0 24px 24px;
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 16px;
+            background: white;
+            border: 2px solid #FF6B6B;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #FF6B6B;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-button:active {
+            transform: scale(0.98);
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 320px;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #2B2B2B;
+        }
+
+        .modal-text {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .modal-btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal-btn-cancel {
+            background: #F0F0F0;
+            color: #666;
+        }
+
+        .modal-btn-confirm {
+            background: #FF6B6B;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="back-button" onclick="navigateTo('profile')">‹</div>
+                <div class="header-title">Paramètres</div>
+                <div class="header-spacer"></div>
+            </div>
+
+            <div class="content">
+                <div class="settings-section">
+                    <div class="section-header">🔔 Notifications</div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-blue">🗺️</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Nouvelle étape</div>
+                                <div class="setting-subtitle">Quand les Goat Trotters publient</div>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="toggle-input" checked id="toggle1">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-green">✔</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Défi sélectionné</div>
+                                <div class="setting-subtitle">Quand votre défi est choisi</div>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="toggle-input" checked id="toggle2">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-yellow">💬</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Réponses</div>
+                                <div class="setting-subtitle">Interactions sur vos contributions</div>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="toggle-input" id="toggle3">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">🌍 Préférences</div>
+                    <div class="setting-item" onclick="changeLanguage()">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-purple">🗣️</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Langue</div>
+                            </div>
+                        </div>
+                        <div class="setting-right">
+                            <span class="setting-value">Français</span>
+                            <span class="arrow-icon">›</span>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-blue">🌙</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Thème sombre</div>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="toggle-input" id="toggle4">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="section-header">🔗 Liens</div>
+                    <div class="setting-item" onclick="openLink('website')">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-blue">🌐</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Site web</div>
+                                <div class="setting-subtitle">goattrotters.com</div>
+                            </div>
+                        </div>
+                        <span class="arrow-icon">›</span>
+                    </div>
+                    <div class="setting-item" onclick="openLink('instagram')">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-purple">📸</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Instagram</div>
+                                <div class="setting-subtitle">@goattrotters</div>
+                            </div>
+                        </div>
+                        <span class="arrow-icon">›</span>
+                    </div>
+                    <div class="setting-item" onclick="openLink('twitter')">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-yellow">🦋</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Twitter</div>
+                                <div class="setting-subtitle">@goattrotters</div>
+                            </div>
+                        </div>
+                        <span class="arrow-icon">›</span>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-logo">
+                        <img src="https://images.unsplash.com/photo-1594623930572-300a3011d9ae?w=200&h=200&fit=crop" alt="Goat Trotters Logo" class="about-logo-image">
+                    </div>
+                    <div class="about-title">Goat Trotters</div>
+                    <div class="about-version">Version 1.0.0</div>
+                    <div class="about-text">
+                        Trois amis, un van, une aventure à travers l'Europe. Découvrez les cultures locales et participez à notre voyage !
+                    </div>
+                    <div class="social-links">
+                        <div class="social-icon" onclick="openLink('website')">🌐</div>
+                        <div class="social-icon" onclick="openLink('instagram')">📸</div>
+                        <div class="social-icon" onclick="openLink('twitter')">🦋</div>
+                        <div class="social-icon" onclick="openLink('youtube')">🎥</div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="setting-item" onclick="openPartnership()">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-green">❤️</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Association partenaire</div>
+                                <div class="setting-subtitle">En savoir plus</div>
+                            </div>
+                        </div>
+                        <span class="arrow-icon">›</span>
+                    </div>
+                    <div class="setting-item" onclick="openTerms()">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-blue">📄</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Conditions d'utilisation</div>
+                            </div>
+                        </div>
+                        <span class="arrow-icon">›</span>
+                    </div>
+                    <div class="setting-item" onclick="openPrivacy()">
+                        <div class="setting-left">
+                            <div class="setting-icon icon-purple">🔒</div>
+                            <div class="setting-info">
+                                <div class="setting-title">Confidentialité</div>
+                            </div>
+                        </div>
+                        <span class="arrow-icon">›</span>
+                    </div>
+                </div>
+
+                <div class="logout-section">
+                    <button class="logout-button" onclick="showLogoutModal()">🚪 Se déconnecter</button>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('data')">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-title">Se déconnecter ?</div>
+            <div class="modal-text">
+                Êtes-vous sûr de vouloir vous déconnecter de votre compte ?
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">Annuler</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmLogout()">Déconnexion</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeLanguage() {
+            alert('🗣️ Choix de la langue\n\nLangues disponibles:\n• Français 🇫🇷\n• English 🇬🇧\n• Español 🇪🇸\n• Italiano 🇮🇹\n• Português 🇵🇹');
+        }
+
+        function openLink(platform) {
+            const links = {
+                'website': '🌐 Ouverture de goattrotters.com',
+                'instagram': '📸 Ouverture d\'Instagram\n@goattrotters',
+                'twitter': '🦋 Ouverture de Twitter\n@goattrotters',
+                'youtube': '🎥 Ouverture de YouTube\nGoat Trotters'
+            };
+            alert(links[platform] + '\n\n(Dans une vraie app, cela ouvrirait le navigateur ou l\'app)');
+        }
+
+        function openPartnership() {
+            alert('❤️ Association partenaire\n\nCette page afficherait:\n• Informations sur l\'association\n• Objectifs du partenariat\n• Comment contribuer\n• Réalisations communes');
+        }
+
+        function openTerms() {
+            alert('📄 Conditions d\'utilisation\n\nCette page afficherait:\n• Les CGU complètes\n• Droits et obligations\n• Utilisation de l\'application\n• Contenu généré par les utilisateurs');
+        }
+
+        function openPrivacy() {
+            alert('🔒 Politique de confidentialité\n\nCette page afficherait:\n• Données collectées\n• Utilisation des données\n• Partage avec des tiers\n• Vos droits (RGPD)');
+        }
+
+        function showLogoutModal() {
+            document.getElementById('logoutModal').classList.add('show');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('show');
+        }
+
+        function confirmLogout() {
+            closeLogoutModal();
+            alert('👋 Déconnexion réussie\n\nVous avez été déconnecté de votre compte.\n\nÀ bientôt sur Goat Trotters !');
+            // Dans une vraie app: redirection vers la page de connexion
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Close modal on outside click
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
+
+        // Monitor toggle changes
+        document.querySelectorAll('.toggle-input').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const setting = this.closest('.setting-item').querySelector('.setting-title').textContent;
+                const status = this.checked ? 'activé' : 'désactivé';
+                console.log(`${setting}: ${status}`);
+            });
+        });
+    </script>
+</body>
+</html>

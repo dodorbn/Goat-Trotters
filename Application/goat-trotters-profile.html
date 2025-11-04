@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: transparent;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            color: white;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .profile-header {
+            background: linear-gradient(180deg, #7FB6C2 0%, #5A9AB8 100%);
+            padding: 80px 24px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .settings-button {
+            position: absolute;
+            top: 60px;
+            right: 24px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .settings-button:active {
+            transform: scale(0.95);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            border: 4px solid white;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .avatar:active {
+            transform: scale(0.98);
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .username {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .user-location {
+            font-size: 15px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .stat-item:active {
+            transform: scale(0.95);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 0 0 120px;
+            margin-top: -20px;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 24px;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2B2B2B;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .badge {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .badge:active {
+            transform: scale(0.95);
+        }
+
+        .badge-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 8px;
+            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 16px rgba(255, 231, 154, 0.3);
+        }
+
+        .badge-icon.locked {
+            background: #F0F0F0;
+            opacity: 0.5;
+        }
+
+        .badge-icon.green {
+            background: linear-gradient(135deg, #C5E0C2 0%, #9FD3A0 100%);
+            box-shadow: 0 4px 16px rgba(159, 211, 160, 0.3);
+        }
+
+        .badge-icon.blue {
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+            box-shadow: 0 4px 16px rgba(127, 182, 194, 0.3);
+        }
+
+        .badge-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #2B2B2B;
+        }
+
+        .badge-name.locked {
+            color: #999;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: #F7F8F9;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .activity-item:active {
+            transform: scale(0.98);
+        }
+
+        .activity-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #C5E0C2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2B2B2B;
+            margin-bottom: 4px;
+        }
+
+        .activity-date {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-button {
+            background: white;
+            border: none;
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2B2B2B;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .action-button:active {
+            transform: scale(0.98);
+        }
+
+        .button-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .button-icon {
+            font-size: 24px;
+        }
+
+        .button-arrow {
+            color: #999;
+        }
+
+        .challenge-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: #F7F8F9;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .challenge-item:active {
+            transform: scale(0.98);
+        }
+
+        .challenge-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .challenge-info {
+            flex: 1;
+        }
+
+        .challenge-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2B2B2B;
+            margin-bottom: 4px;
+        }
+
+        .challenge-country {
+            font-size: 13px;
+            color: #7FB6C2;
+            font-weight: 600;
+        }
+
+        .challenge-votes {
+            background: #7FB6C2;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        /* Tooltip pour badge mystère */
+        .badge-tooltip {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            text-align: center;
+            z-index: 10001;
+            animation: fadeIn 0.3s;
+        }
+
+        .badge-tooltip.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="profile-header">
+                <div class="settings-button" onclick="navigateTo('settings')">⚙️</div>
+                <div class="avatar" onclick="editProfile()">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop" alt="Avatar" class="avatar-image">
+                </div>
+                <div class="username">@TravelEnthusiast</div>
+                <div class="user-location">📍 Paris, France</div>
+                
+                <div class="user-stats">
+                    <div class="stat-item" onclick="viewStats('questions')">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Questions</div>
+                    </div>
+                    <div class="stat-item" onclick="viewStats('challenges')">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Défis proposés</div>
+                    </div>
+                    <div class="stat-item" onclick="viewStats('countries')">
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">Pays suivis</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="section">
+                    <div class="section-title">🏆 Mes badges</div>
+                    <div class="badges-grid">
+                        <div class="badge" onclick="viewBadge('question')">
+                            <div class="badge-icon green">✓</div>
+                            <div class="badge-name">Question posée</div>
+                        </div>
+                        <div class="badge" onclick="viewBadge('challenge')">
+                            <div class="badge-icon blue">⭐</div>
+                            <div class="badge-name">Défi réalisé</div>
+                        </div>
+                        <div class="badge" onclick="viewBadge('countries')">
+                            <div class="badge-icon">🌍</div>
+                            <div class="badge-name">10 pays suivis</div>
+                        </div>
+                        <div class="badge" onclick="viewBadge('contributor')">
+                            <div class="badge-icon green">💬</div>
+                            <div class="badge-name">Contributeur</div>
+                        </div>
+                        <div class="badge" onclick="viewBadge('voter')">
+                            <div class="badge-icon blue">🎯</div>
+                            <div class="badge-name">Top voteur</div>
+                        </div>
+                        <div class="badge" onclick="showMysteryBadge()">
+                            <div class="badge-icon locked">🔒</div>
+                            <div class="badge-name locked">Mystère</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">📝 Mes défis en attente</div>
+                    <div class="challenge-item" onclick="viewChallenge(1)">
+                        <div class="challenge-info">
+                            <div class="challenge-title">Goûter une spécialité locale</div>
+                            <div class="challenge-country">🇮🇹 Italie</div>
+                        </div>
+                        <div class="challenge-votes">156 👍</div>
+                    </div>
+                    <div class="challenge-item" onclick="viewChallenge(2)">
+                        <div class="challenge-info">
+                            <div class="challenge-title">Apprendre une chanson traditionnelle</div>
+                            <div class="challenge-country">🇬🇷 Grèce</div>
+                        </div>
+                        <div class="challenge-votes">89 👍</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">📅 Activité récente</div>
+                    <div class="activity-list">
+                        <div class="activity-item" onclick="viewActivity(1)">
+                            <div class="activity-icon">❓</div>
+                            <div class="activity-info">
+                                <div class="activity-title">Question posée en Espagne</div>
+                                <div class="activity-date">Il y a 3 jours</div>
+                            </div>
+                        </div>
+                        <div class="activity-item" onclick="viewActivity(2)">
+                            <div class="activity-icon">👍</div>
+                            <div class="activity-info">
+                                <div class="activity-title">Voté pour 5 défis</div>
+                                <div class="activity-date">Il y a 1 semaine</div>
+                            </div>
+                        </div>
+                        <div class="activity-item" onclick="viewActivity(3)">
+                            <div class="activity-icon">🎯</div>
+                            <div class="activity-info">
+                                <div class="activity-title">Défi proposé accepté</div>
+                                <div class="activity-date">Il y a 2 semaines</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">⚡ Actions rapides</div>
+                    <div class="action-buttons">
+                        <button class="action-button" onclick="contactGoatTrotters()">
+                            <div class="button-left">
+                                <span class="button-icon">💌</span>
+                                <span>Message aux Goat Trotters</span>
+                            </div>
+                            <span class="button-arrow">›</span>
+                        </button>
+                        <button class="action-button" onclick="openWebsite()">
+                            <div class="button-left">
+                                <span class="button-icon">🌐</span>
+                                <span>Visiter le site web</span>
+                            </div>
+                            <span class="button-arrow">›</span>
+                        </button>
+                        <button class="action-button" onclick="openSocial()">
+                            <div class="button-left">
+                                <span class="button-icon">📱</span>
+                                <span>Réseaux sociaux</span>
+                            </div>
+                            <span class="button-arrow">›</span>
+                        </button>
+                        <button class="action-button" onclick="supportProject()">
+                            <div class="button-left">
+                                <span class="button-icon">❤️</span>
+                                <span>Soutenir le projet</span>
+                            </div>
+                            <span class="button-arrow">›</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('data')">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="badge-tooltip" id="mysteryTooltip">
+        🔒 Badge mystère<br>
+        Continuez à participer pour le débloquer !
+    </div>
+
+    <script>
+        function editProfile() {
+            alert('✏️ Modifier le profil\n\nCette page permettrait de:\n• Changer la photo de profil\n• Modifier le nom d\'utilisateur\n• Changer la localisation\n• Modifier la bio');
+        }
+
+        function viewStats(type) {
+            const stats = {
+                'questions': 'Vos 12 questions posées avec réponses',
+                'challenges': 'Vos 8 défis proposés avec statut',
+                'countries': 'Les 23 pays que vous suivez'
+            };
+            alert(`📊 ${stats[type]}`);
+        }
+
+        function viewBadge(badge) {
+            const badges = {
+                'question': 'Question posée\n\nVous avez posé votre première question aux habitants !',
+                'challenge': 'Défi réalisé\n\nLes Goat Trotters ont réalisé un de vos défis !',
+                'countries': '10 pays suivis\n\nVous suivez au moins 10 pays du voyage !',
+                'contributor': 'Contributeur\n\nVous participez activement à la communauté !',
+                'voter': 'Top voteur\n\nVous avez voté pour plus de 50 défis !'
+            };
+            alert(`🏆 ${badges[badge]}`);
+        }
+
+        function showMysteryBadge() {
+            const tooltip = document.getElementById('mysteryTooltip');
+            tooltip.classList.add('show');
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 2000);
+        }
+
+        function viewChallenge(id) {
+            alert(`🎯 Défi #${id}\n\nCette page afficherait:\n• Le défi complet\n• Nombre de votes en temps réel\n• Commentaires\n• Possibilité de modifier`);
+        }
+
+        function viewActivity(id) {
+            alert(`📅 Activité #${id}\n\nDétails de cette activité avec:\n• Description complète\n• Date et heure\n• Lien vers le contenu associé`);
+        }
+
+        function contactGoatTrotters() {
+            alert('💌 Message aux Goat Trotters\n\nCette page ouvrirait:\n• Un formulaire de contact\n• Ou l\'application mail\n• Ou une messagerie intégrée');
+        }
+
+        function openWebsite() {
+            alert('🌐 Ouverture du site\n\nwww.goattrotters.com\n\n(Dans une vraie app, cela ouvrirait le navigateur)');
+        }
+
+        function openSocial() {
+            alert('📱 Réseaux sociaux\n\nChoisissez:\n• Instagram @goattrotters\n• Twitter @goattrotters\n• YouTube Goat Trotters\n• TikTok @goattrotters');
+        }
+
+        function supportProject() {
+            alert('❤️ Soutenir le projet\n\nCette page afficherait:\n• Options de don\n• Devenir mécène\n• Acheter des produits dérivés\n• Partager le projet');
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+    </script>
+</body>
+</html>

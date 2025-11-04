@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Trotters - Accueil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .island-icon {
+            font-size: 18px;
+        }
+
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            background: #F7F8F9;
+            border-radius: 45px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .iphone-screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 54px;
+            background: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 30px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 12px 24px 18px;
+            text-align: center;
+            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 54px;
+            z-index: 99;
+        }
+
+        .logo-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #7FB6C2 0%, #FFE79A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            margin: 0 auto 10px;
+            overflow: hidden;
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .app-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2B2B2B;
+            letter-spacing: -0.5px;
+        }
+
+        .map-section {
+            background: white;
+            border-radius: 24px;
+            padding: 18px;
+            margin: 20px 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .map-section:active {
+            transform: scale(0.98);
+        }
+
+        .map-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #miniMap {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .map-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #7FB6C2;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 24px;
+            margin: 20px 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(135deg, #FFE79A 0%, #7FB6C2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            overflow: hidden;
+        }
+
+        .story-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-content {
+            padding: 22px;
+        }
+
+        .story-label {
+            display: inline-block;
+            background: #FFE79A;
+            color: #2B2B2B;
+            padding: 7px 16px;
+            border-radius: 22px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .story-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .story-text {
+            font-size: 16px;
+            line-height: 1.45;
+            color: #666;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 32px 0 16px;
+            padding: 0 24px;
+            letter-spacing: -0.7px;
+            color: #2B2B2B;
+        }
+
+        .journey-card {
+            background: white;
+            border-radius: 24px;
+            margin: 16px 24px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .journey-card:active {
+            transform: scale(0.98);
+        }
+
+        .journey-image {
+            width: 100%;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            overflow: hidden;
+        }
+
+        .journey-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .journey-image.mountain {
+            background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%);
+        }
+
+        .journey-image.sea {
+            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+        }
+
+        .journey-info {
+            padding: 18px 20px 20px;
+        }
+
+        .journey-location {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .journey-date {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .journey-caption {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .cta-buttons {
+            padding: 0 24px;
+            margin: 32px 0 40px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            margin-bottom: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: #7FB6C2;
+            color: white;
+            box-shadow: 0 6px 20px rgba(127,182,194,0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 24px rgba(127,182,194,0.4);
+        }
+
+        .btn-secondary {
+            background: #FFE79A;
+            color: #2B2B2B;
+            box-shadow: 0 6px 20px rgba(255,231,154,0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 24px rgba(255,231,154,0.4);
+        }
+
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 0.33px solid rgba(0,0,0,0.04);
+            position: sticky;
+            bottom: 34px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8E8E93;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+
+        .nav-item.active {
+            color: #7FB6C2;
+        }
+
+        .nav-icon {
+            font-size: 28px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .home-indicator {
+            height: 34px;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .home-bar {
+            width: 140px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        /* Custom Leaflet Styles */
+        .custom-marker {
+            background: white;
+            border: 3px solid #7FB6C2;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        .current-marker {
+            animation: pulse-marker 2s infinite;
+            border-color: #FFE79A;
+        }
+
+        @keyframes pulse-marker {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            padding: 6px;
+        }
+
+        .leaflet-popup-content {
+            margin: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .popup-date {
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <div class="dynamic-island">
+            <div class="island-icon">🐐</div>
+        </div>
+        
+        <div class="iphone-screen">
+            <div class="status-bar">
+                <div class="status-time">9:41</div>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>📡</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <div class="header">
+                <div class="logo-circle">
+                    <img src="logo.png" alt="Goat Trotters Logo" class="logo-image">
+                </div>
+                <div class="app-name">Goat Trotters</div>
+            </div>
+
+            <div class="map-section" onclick="navigateTo('map')">
+                <div class="map-container">
+                    <div id="miniMap"></div>
+                    <div class="map-overlay">🗺️ Voir le trajet complet</div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1464207687429-7505649dae38?w=800&h=500&fit=crop" alt="Berger dans les Pyrénées" class="story-photo">
+                </div>
+                <div class="story-content">
+                    <span class="story-label">Story du jour</span>
+                    <div class="story-title">Rencontre avec un berger dans les Pyrénées</div>
+                    <div class="story-text">Aujourd'hui, nous avons croisé un berger qui nous a raconté l'histoire de sa vallée et partagé son fromage de chèvre artisanal. Un moment authentique et inoubliable !</div>
+                </div>
+            </div>
+
+            <div class="section-title">Dernières étapes</div>
+
+            <div class="journey-card" onclick="navigateTo('gallery')">
+                <div class="journey-image mountain">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop" alt="Andorre" class="journey-photo">
+                </div>
+                <div class="journey-info">
+                    <div class="journey-location">Andorre-la-Vieille, Andorre</div>
+                    <div class="journey-date">Il y a 2 jours</div>
+                    <div class="journey-caption">Pause en altitude dans ce petit pays de montagne. Les habitants nous ont parlé de leur vie entre deux géants.</div>
+                </div>
+            </div>
+
+            <div class="journey-card" onclick="navigateTo('gallery')">
+                <div class="journey-image sea">
+                    <img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&h=400&fit=crop" alt="Barcelone" class="journey-photo">
+                </div>
+                <div class="journey-info">
+                    <div class="journey-location">Barcelone, Espagne</div>
+                    <div class="journey-date">Il y a 5 jours</div>
+                    <div class="journey-caption">Entre architecture moderne et traditions catalanes, les Barcelonais nous ont révélé leur vision du bonheur urbain.</div>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <button class="btn btn-primary" onclick="navigateTo('map')">📍 Suivre notre trajet en direct</button>
+                <button class="btn btn-secondary" onclick="navigateTo('challenges')">💬 Proposer une question ou un défi</button>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="navigateTo('home')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Accueil</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('map')">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-label">Carte</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">❓</div>
+                    <div class="nav-label">Défis</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('data')">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-label">Données</div>
+                </div>
+                <div class="nav-item" onclick="navigateTo('profile')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Profil</div>
+                </div>
+            </div>
+
+            <div class="home-indicator">
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Données des lieux visités
+        const locations = [
+            { name: 'Paris', lat: 48.8566, lng: 2.3522, emoji: '🗼', current: false },
+            { name: 'Lyon', lat: 45.7640, lng: 4.8357, emoji: '🍷', current: false },
+            { name: 'Toulouse', lat: 43.6047, lng: 1.4442, emoji: '✈️', current: false },
+            { name: 'Barcelone', lat: 41.3851, lng: 2.1734, emoji: '🌊', current: false },
+            { name: 'Andorre', lat: 42.5063, lng: 1.5218, emoji: '🏔️', current: true },
+        ];
+
+        let miniMap;
+
+        // Initialiser la mini carte
+        function initMiniMap() {
+            miniMap = L.map('miniMap', {
+                zoomControl: false,
+                dragging: false,
+                touchZoom: false,
+                scrollWheelZoom: false,
+                doubleClickZoom: false,
+                boxZoom: false,
+                keyboard: false,
+                attributionControl: false
+            }).setView([45.5, 5.0], 5);
+
+            // Ajouter le fond de carte
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+            }).addTo(miniMap);
+
+            // Ajouter la ligne de trajet
+            const routeCoordinates = locations.map(loc => [loc.lat, loc.lng]);
+            const polyline = L.polyline(routeCoordinates, {
+                color: '#7FB6C2',
+                weight: 3,
+                opacity: 0.8,
+                dashArray: '8, 8'
+            }).addTo(miniMap);
+
+            // Ajouter les marqueurs
+            locations.forEach((location) => {
+                const markerIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div class="custom-marker ${location.current ? 'current-marker' : ''}">${location.emoji}</div>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                L.marker([location.lat, location.lng], { icon: markerIcon })
+                    .addTo(miniMap);
+            });
+
+            // Ajuster la vue pour voir tous les marqueurs
+            miniMap.fitBounds(polyline.getBounds(), { padding: [30, 30] });
+        }
+
+        function navigateTo(page) {
+            window.location.href = `goat-trotters-${page}.html`;
+        }
+
+        // Initialiser la carte au chargement
+        window.onload = () => {
+            setTimeout(initMiniMap, 100);
+        };
+    </script>
+</body>
+</html>
