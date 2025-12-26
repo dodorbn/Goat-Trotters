@@ -1,0 +1,271 @@
+### Réponses test pour France
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user1f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user1f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Non",
+  "question": {
+    "id": 2
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user1f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Non",
+  "question": {
+    "id": 3
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user2f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user2f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Non",
+  "question": {
+    "id": 2
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user2f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 3
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user3f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user3f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 2
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user3f",
+  "age": 25,
+  "country": "France",
+  "category": "Étudiant(e)",
+  "gender": "Homme",
+  "answer": "Non",
+  "question": {
+    "id": 3
+  }
+}
+
+### Réponses test pour Allemagne
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user2",
+  "age": 35,
+  "country": "Allemagne",
+  "category": "Employé(e)",
+  "gender": "Femme",
+  "answer": "Non",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user2",
+  "age": 35,
+  "country": "Allemagne",
+  "category": "Employé(e)",
+  "gender": "Femme",
+  "answer": "Oui",
+  "question": {
+    "id": 2
+  }
+}
+
+### Réponses test pour Espagne
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user3",
+  "age": 45,
+  "country": "Espagne",
+  "category": "Cadre",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user3",
+  "age": 45,
+  "country": "Espagne",
+  "category": "Cadre",
+  "gender": "Homme",
+  "answer": "Oui",
+  "question": {
+    "id": 2
+  }
+}
+
+### Réponses test pour Italie
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user4",
+  "age": 19,
+  "country": "Italie",
+  "category": "Étudiant(e)",
+  "gender": "Femme",
+  "answer": "Non",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user4",
+  "age": 19,
+  "country": "Italie",
+  "category": "Étudiant(e)",
+  "gender": "Femme",
+  "answer": "Non",
+  "question": {
+    "id": 2
+  }
+}
+
+### Réponses test pour Portugal
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user5",
+  "age": 28,
+  "country": "Portugal",
+  "category": "Employé(e)",
+  "gender": "Autre",
+  "answer": "Oui",
+  "question": {
+    "id": 1
+  }
+}
+
+###
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user5",
+  "age": 28,
+  "country": "Portugal",
+  "category": "Employé(e)",
+  "gender": "Autre",
+  "answer": "Non",
+  "question": {
+    "id": 2
+  }
+}
