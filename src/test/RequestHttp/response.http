@@ -1,0 +1,43 @@
+### Obtenir toutes les réponses
+GET http://localhost:8080/api/responses
+
+### Créer une nouvelle réponse
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user123",
+  "age": 25,
+  "country": "France",
+  "category": "général",
+  "gender": "F",
+  "answer": "Ma réponse à la question",
+  "question": {
+    "id": 1
+  }
+}
+
+### Supprimer une réponse spécifique
+DELETE http://localhost:8080/api/responses/1
+
+### Supprimer toutes les réponses d'un utilisateur
+DELETE http://localhost:8080/api/responses/user/user123
+
+### Supprimer toutes les réponses
+DELETE http://localhost:8080/api/responses
+
+### Test de doublon (devrait retourner un conflit)
+POST http://localhost:8080/api/responses
+Content-Type: application/json
+
+{
+  "userId": "user123",
+  "age": 30,
+  "country": "France",
+  "category": "général",
+  "gender": "M",
+  "answer": "Tentative de réponse multiple",
+  "question": {
+    "id": 1
+  }
+}
