@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goat Trotters - Défis</title>
+    <title>Goat Trotters - Questions</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -203,132 +203,63 @@
             cursor: pointer;
         }
 
-        .challenge-card {
+        .question-card {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(30px) saturate(180%);
             border-radius: 20px;
             margin: 12px 24px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.3);
-            border-left: 5px solid rgba(127, 182, 194, 0.6);
-            border: 1px solid rgba(255,255,255,0.3);
-            border-left: 5px solid rgba(127, 182, 194, 0.6);
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        .challenge-card:active {
+        .question-card:active {
             transform: scale(0.98);
         }
 
-        .challenge-card.completed {
-            border-left-color: rgba(159, 211, 160, 0.8);
-            background: linear-gradient(135deg, rgba(159, 211, 160, 0.15) 0%, rgba(255,255,255,0.25) 100%);
-        }
-
-        .challenge-card.in-progress {
-            border-left-color: rgba(255, 231, 154, 0.8);
-        }
-
-        .challenge-header {
+        .question-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
-        .challenge-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(10px);
-        }
-
-        .status-todo {
-            background: rgba(240, 240, 240, 0.5);
-            color: rgba(0,0,0,0.6);
-        }
-
-        .status-progress {
-            background: rgba(255, 244, 214, 0.6);
-            color: rgba(184, 134, 11, 0.9);
-        }
-
-        .status-done {
-            background: rgba(230, 247, 230, 0.6);
-            color: rgba(45, 122, 45, 0.9);
-        }
-
-        .challenge-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: rgba(0,0,0,0.8);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .challenge-country-tag {
+        .question-country {
             display: inline-block;
-            background: rgba(197, 224, 194, 0.5);
+            background: rgba(255, 231, 154, 0.5);
             backdrop-filter: blur(10px);
-            color: rgba(0,0,0,0.7);
             padding: 5px 12px;
             border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
-            margin-bottom: 12px;
-            border: 1px solid rgba(197, 224, 194, 0.6);
+            color: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255, 231, 154, 0.6);
         }
 
-        .challenge-author {
-            font-size: 13px;
-            color: rgba(0,0,0,0.5);
-            margin-bottom: 14px;
-        }
-
-        .challenge-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .vote-button {
+        .vote-count {
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 16px;
-            background: rgba(240, 240, 240, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(240, 240, 240, 0.6);
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(0,0,0,0.6);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .vote-button:active {
-            transform: scale(0.95);
-        }
-
-        .vote-button.voted {
-            background: rgba(127, 182, 194, 0.5);
-            color: white;
-            border-color: rgba(127, 182, 194, 0.6);
-        }
-
-        .watch-link {
             color: rgba(127, 182, 194, 0.9);
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .question-text {
+            font-size: 16px;
             font-weight: 600;
-            text-decoration: none;
+            color: rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: rgba(0,0,0,0.5);
         }
 
         .fab-button {
@@ -431,13 +362,13 @@
             </div>
 
             <div class="header">
-                <div class="header-title">Défis</div>
+                <div class="header-title">Questions</div>
             </div>
 
             <div class="search-bar">
                 <div class="search-input-wrapper">
                     <span>🔍</span>
-                    <input type="text" class="search-input" placeholder="Rechercher un défi...">
+                    <input type="text" class="search-input" placeholder="Rechercher une question...">
                 </div>
             </div>
 
@@ -447,76 +378,108 @@
                 <button class="pill">🇫🇷 France</button>
                 <button class="pill">🇮🇹 Italie</button>
                 <button class="pill">🇵🇹 Portugal</button>
+                <button class="pill">🇬🇷 Grèce</button>
             </div>
 
             <div class="content">
                 <div class="section-header">
-                    <div class="section-title">Défis populaires</div>
+                    <div class="section-title">Questions populaires</div>
                     <div class="sort-button">⇅ Trier</div>
                 </div>
 
-                <div class="challenge-card completed">
-                    <div class="challenge-header">
-                        <span class="challenge-status status-done">✓ Réalisé</span>
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-country">🇪🇸 Espagne</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>342</span>
+                        </div>
                     </div>
-                    <div class="challenge-title">Apprenez une danse traditionnelle locale</div>
-                    <span class="challenge-country-tag">🇪🇸 Espagne</span>
-                    <div class="challenge-author">Proposé par @Maria_87</div>
-                    <div class="challenge-footer">
-                        <button class="vote-button voted">👍 247</button>
-                        <a href="#" class="watch-link">🎬 Voir la vidéo</a>
-                    </div>
-                </div>
-
-                <div class="challenge-card in-progress">
-                    <div class="challenge-header">
-                        <span class="challenge-status status-progress">⏳ En cours</span>
-                    </div>
-                    <div class="challenge-title">Goûtez un plat typique jamais essayé auparavant</div>
-                    <span class="challenge-country-tag">🇵🇹 Portugal</span>
-                    <div class="challenge-author">Proposé par @FoodLover_23</div>
-                    <div class="challenge-footer">
-                        <button class="vote-button voted">👍 189</button>
-                        <a href="#" class="watch-link">📸 Photos</a>
+                    <div class="question-text">Qu'est-ce qui vous rend heureux au quotidien ?</div>
+                    <div class="question-meta">
+                        <span>Par @Maria_BCN</span>
+                        <span>•</span>
+                        <span>89 réponses</span>
                     </div>
                 </div>
 
-                <div class="challenge-card">
-                    <div class="challenge-header">
-                        <span class="challenge-status status-todo">À faire</span>
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-country">🇫🇷 France</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>287</span>
+                        </div>
                     </div>
-                    <div class="challenge-title">Participez à une fête locale ou un festival de village</div>
-                    <span class="challenge-country-tag">🇮🇹 Italie</span>
-                    <div class="challenge-author">Proposé par @TravelBug_Italia</div>
-                    <div class="challenge-footer">
-                        <button class="vote-button">👍 156</button>
-                        <span style="color: rgba(0,0,0,0.5); font-size: 13px;">342 votes</span>
-                    </div>
-                </div>
-
-                <div class="challenge-card">
-                    <div class="challenge-header">
-                        <span class="challenge-status status-todo">À faire</span>
-                    </div>
-                    <div class="challenge-title">Dormez une nuit dans un lieu insolite</div>
-                    <span class="challenge-country-tag">🇫🇷 France</span>
-                    <div class="challenge-author">Proposé par @AdventureSeeker</div>
-                    <div class="challenge-footer">
-                        <button class="vote-button">👍 134</button>
-                        <span style="color: rgba(0,0,0,0.5); font-size: 13px;">289 votes</span>
+                    <div class="question-text">Comment définiriez-vous la liberté ?</div>
+                    <div class="question-meta">
+                        <span>Par @Pierre_Lyon</span>
+                        <span>•</span>
+                        <span>67 réponses</span>
                     </div>
                 </div>
 
-                <div class="challenge-card completed">
-                    <div class="challenge-header">
-                        <span class="challenge-status status-done">✓ Réalisé</span>
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-country">🇮🇹 Italie</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>234</span>
+                        </div>
                     </div>
-                    <div class="challenge-title">Rencontrez un artisan local</div>
-                    <span class="challenge-country-tag">🇫🇷 France</span>
-                    <div class="challenge-author">Proposé par @CultureLover</div>
-                    <div class="challenge-footer">
-                        <button class="vote-button voted">👍 312</button>
-                        <a href="#" class="watch-link">🎬 Voir la vidéo</a>
+                    <div class="question-text">Quelle est votre plus grande passion dans la vie ?</div>
+                    <div class="question-meta">
+                        <span>Par @Marco_Roma</span>
+                        <span>•</span>
+                        <span>56 réponses</span>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-country">🇵🇹 Portugal</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>198</span>
+                        </div>
+                    </div>
+                    <div class="question-text">Quel rôle joue la famille dans votre vie ?</div>
+                    <div class="question-meta">
+                        <span>Par @Ana_Porto</span>
+                        <span>•</span>
+                        <span>43 réponses</span>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-country">🇬🇷 Grèce</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>176</span>
+                        </div>
+                    </div>
+                    <div class="question-text">Comment gardez-vous vos traditions vivantes ?</div>
+                    <div class="question-meta">
+                        <span>Par @Nikos_Athens</span>
+                        <span>•</span>
+                        <span>38 réponses</span>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-country">🇪🇸 Espagne</span>
+                        <div class="vote-count">
+                            <span>👍</span>
+                            <span>156</span>
+                        </div>
+                    </div>
+                    <div class="question-text">Quel est votre endroit préféré dans votre ville ?</div>
+                    <div class="question-meta">
+                        <span>Par @Sofia_Madrid</span>
+                        <span>•</span>
+                        <span>31 réponses</span>
                     </div>
                 </div>
             </div>
@@ -532,11 +495,11 @@
                     <div class="nav-icon">🗺️</div>
                     <div class="nav-label">Carte</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('questions')">
+                <div class="nav-item active">
                     <div class="nav-icon">❓</div>
                     <div class="nav-label">Questions</div>
                 </div>
-                <div class="nav-item active">
+                <div class="nav-item" onclick="navigateTo('challenges')">
                     <div class="nav-icon">🎯</div>
                     <div class="nav-label">Défis</div>
                 </div>

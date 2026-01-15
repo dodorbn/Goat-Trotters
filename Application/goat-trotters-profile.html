@@ -14,7 +14,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
-            background: white;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #ffecd2 50%, #fcb69f 75%, #ffeaa7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,14 +24,22 @@
             padding: 40px 20px;
         }
 
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .iphone-frame {
             width: 393px;
             height: 852px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
             border-radius: 55px;
             padding: 12px;
-            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.3);
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .dynamic-island {
@@ -39,7 +49,7 @@
             transform: translateX(-50%);
             width: 126px;
             height: 37px;
-            background: #000;
+            background: rgba(0,0,0,0.9);
             border-radius: 19px;
             z-index: 10000;
             display: flex;
@@ -47,18 +57,16 @@
             justify-content: center;
         }
 
-        .island-icon {
-            font-size: 18px;
-        }
-
         .iphone-screen {
             width: 100%;
             height: 100%;
-            background: #F7F8F9;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(40px) saturate(180%);
             border-radius: 45px;
             overflow-y: auto;
             overflow-x: hidden;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .iphone-screen::-webkit-scrollbar {
@@ -80,22 +88,18 @@
         .status-time {
             font-size: 17px;
             font-weight: 600;
-            letter-spacing: -0.4px;
             color: white;
-        }
-
-        .status-icons {
-            display: flex;
-            gap: 6px;
-            font-size: 14px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .profile-header {
-            background: linear-gradient(180deg, #7FB6C2 0%, #5A9AB8 100%);
+            background: linear-gradient(180deg, rgba(127, 182, 194, 0.6) 0%, rgba(90, 154, 184, 0.5) 100%);
+            backdrop-filter: blur(30px);
             padding: 80px 24px 40px;
             text-align: center;
             color: white;
             position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
 
         .settings-button {
@@ -112,7 +116,9 @@
             align-items: center;
             justify-content: center;
             background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
             border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .settings-button:active {
@@ -122,18 +128,19 @@
         .avatar {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+            background: linear-gradient(135deg, rgba(255, 231, 154, 0.6) 0%, rgba(247, 181, 160, 0.6) 100%);
+            backdrop-filter: blur(20px);
             border-radius: 50%;
             margin: 0 auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 48px;
-            border: 4px solid white;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            border: 4px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.3s;
         }
 
         .avatar:active {
@@ -151,6 +158,7 @@
             font-weight: 700;
             margin-bottom: 6px;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .user-location {
@@ -193,18 +201,20 @@
         }
 
         .section {
-            background: white;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(30px) saturate(180%);
             margin: 20px 24px;
             border-radius: 24px;
             padding: 24px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .section-title {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 20px;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.8);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -230,38 +240,31 @@
             width: 64px;
             height: 64px;
             margin: 0 auto 8px;
-            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+            background: linear-gradient(135deg, rgba(255, 231, 154, 0.5) 0%, rgba(247, 181, 160, 0.5) 100%);
+            backdrop-filter: blur(20px);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
             box-shadow: 0 4px 16px rgba(255, 231, 154, 0.3);
-        }
-
-        .badge-icon.locked {
-            background: #F0F0F0;
-            opacity: 0.5;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .badge-icon.green {
-            background: linear-gradient(135deg, #C5E0C2 0%, #9FD3A0 100%);
+            background: linear-gradient(135deg, rgba(197, 224, 194, 0.5) 0%, rgba(159, 211, 160, 0.5) 100%);
             box-shadow: 0 4px 16px rgba(159, 211, 160, 0.3);
         }
 
         .badge-icon.blue {
-            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+            background: linear-gradient(135deg, rgba(127, 182, 194, 0.5) 0%, rgba(90, 154, 184, 0.5) 100%);
             box-shadow: 0 4px 16px rgba(127, 182, 194, 0.3);
         }
 
         .badge-name {
             font-size: 12px;
             font-weight: 600;
-            color: #2B2B2B;
-        }
-
-        .badge-name.locked {
-            color: #999;
+            color: rgba(0,0,0,0.7);
         }
 
         .activity-list {
@@ -274,10 +277,12 @@
             display: flex;
             gap: 16px;
             padding: 16px;
-            background: #F7F8F9;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
             border-radius: 16px;
             cursor: pointer;
             transition: transform 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .activity-item:active {
@@ -287,13 +292,15 @@
         .activity-icon {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #7FB6C2 0%, #C5E0C2 100%);
+            background: linear-gradient(135deg, rgba(127, 182, 194, 0.4) 0%, rgba(197, 224, 194, 0.4) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .activity-info {
@@ -303,13 +310,13 @@
         .activity-title {
             font-size: 15px;
             font-weight: 600;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.8);
             margin-bottom: 4px;
         }
 
         .activity-date {
             font-size: 13px;
-            color: #999;
+            color: rgba(0,0,0,0.5);
         }
 
         .action-buttons {
@@ -319,8 +326,9 @@
         }
 
         .action-button {
-            background: white;
-            border: none;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 16px;
             border-radius: 16px;
             display: flex;
@@ -328,8 +336,8 @@
             justify-content: space-between;
             font-size: 16px;
             font-weight: 600;
-            color: #2B2B2B;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            color: rgba(0,0,0,0.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             cursor: pointer;
             transition: transform 0.2s;
         }
@@ -349,63 +357,16 @@
         }
 
         .button-arrow {
-            color: #999;
-        }
-
-        .challenge-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            background: #F7F8F9;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .challenge-item:active {
-            transform: scale(0.98);
-        }
-
-        .challenge-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .challenge-info {
-            flex: 1;
-        }
-
-        .challenge-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #2B2B2B;
-            margin-bottom: 4px;
-        }
-
-        .challenge-country {
-            font-size: 13px;
-            color: #7FB6C2;
-            font-weight: 600;
-        }
-
-        .challenge-votes {
-            background: #7FB6C2;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
+            color: rgba(0,0,0,0.4);
         }
 
         .bottom-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(60px) saturate(180%);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            border-top: 0.33px solid rgba(0,0,0,0.04);
+            border-top: 1px solid rgba(255,255,255,0.3);
             position: sticky;
             bottom: 34px;
         }
@@ -414,10 +375,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #8E8E93;
+            color: rgba(0, 0, 0, 0.5);
             padding: 6px 14px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            border-radius: 12px;
         }
 
         .nav-item:active {
@@ -425,7 +387,7 @@
         }
 
         .nav-item.active {
-            color: #7FB6C2;
+            color: rgba(127, 182, 194, 0.9);
         }
 
         .nav-icon {
@@ -440,7 +402,7 @@
 
         .home-indicator {
             height: 34px;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -451,34 +413,8 @@
         .home-bar {
             width: 140px;
             height: 5px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.2);
             border-radius: 3px;
-        }
-
-        /* Tooltip pour badge mystère */
-        .badge-tooltip {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.9);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 16px;
-            font-size: 14px;
-            text-align: center;
-            z-index: 10001;
-            animation: fadeIn 0.3s;
-        }
-
-        .badge-tooltip.show {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
     </style>
 </head>
@@ -499,23 +435,23 @@
             </div>
 
             <div class="profile-header">
-                <div class="settings-button" onclick="navigateTo('settings')">⚙️</div>
-                <div class="avatar" onclick="editProfile()">
+                <div class="settings-button">⚙️</div>
+                <div class="avatar">
                     <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop" alt="Avatar" class="avatar-image">
                 </div>
                 <div class="username">@TravelEnthusiast</div>
                 <div class="user-location">📍 Paris, France</div>
                 
                 <div class="user-stats">
-                    <div class="stat-item" onclick="viewStats('questions')">
+                    <div class="stat-item">
                         <div class="stat-number">12</div>
                         <div class="stat-label">Questions</div>
                     </div>
-                    <div class="stat-item" onclick="viewStats('challenges')">
+                    <div class="stat-item">
                         <div class="stat-number">8</div>
                         <div class="stat-label">Défis proposés</div>
                     </div>
-                    <div class="stat-item" onclick="viewStats('countries')">
+                    <div class="stat-item">
                         <div class="stat-number">23</div>
                         <div class="stat-label">Pays suivis</div>
                     </div>
@@ -526,69 +462,51 @@
                 <div class="section">
                     <div class="section-title">🏆 Mes badges</div>
                     <div class="badges-grid">
-                        <div class="badge" onclick="viewBadge('question')">
+                        <div class="badge">
                             <div class="badge-icon green">✓</div>
                             <div class="badge-name">Question posée</div>
                         </div>
-                        <div class="badge" onclick="viewBadge('challenge')">
+                        <div class="badge">
                             <div class="badge-icon blue">⭐</div>
                             <div class="badge-name">Défi réalisé</div>
                         </div>
-                        <div class="badge" onclick="viewBadge('countries')">
+                        <div class="badge">
                             <div class="badge-icon">🌍</div>
                             <div class="badge-name">10 pays suivis</div>
                         </div>
-                        <div class="badge" onclick="viewBadge('contributor')">
+                        <div class="badge">
                             <div class="badge-icon green">💬</div>
                             <div class="badge-name">Contributeur</div>
                         </div>
-                        <div class="badge" onclick="viewBadge('voter')">
+                        <div class="badge">
                             <div class="badge-icon blue">🎯</div>
                             <div class="badge-name">Top voteur</div>
                         </div>
-                        <div class="badge" onclick="showMysteryBadge()">
-                            <div class="badge-icon locked">🔒</div>
-                            <div class="badge-name locked">Mystère</div>
+                        <div class="badge">
+                            <div class="badge-icon" style="opacity: 0.4;">🔒</div>
+                            <div class="badge-name" style="opacity: 0.4;">Mystère</div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <div class="section-title">📝 Mes défis en attente</div>
-                    <div class="challenge-item" onclick="viewChallenge(1)">
-                        <div class="challenge-info">
-                            <div class="challenge-title">Goûter une spécialité locale</div>
-                            <div class="challenge-country">🇮🇹 Italie</div>
-                        </div>
-                        <div class="challenge-votes">156 👍</div>
-                    </div>
-                    <div class="challenge-item" onclick="viewChallenge(2)">
-                        <div class="challenge-info">
-                            <div class="challenge-title">Apprendre une chanson traditionnelle</div>
-                            <div class="challenge-country">🇬🇷 Grèce</div>
-                        </div>
-                        <div class="challenge-votes">89 👍</div>
                     </div>
                 </div>
 
                 <div class="section">
                     <div class="section-title">📅 Activité récente</div>
                     <div class="activity-list">
-                        <div class="activity-item" onclick="viewActivity(1)">
+                        <div class="activity-item">
                             <div class="activity-icon">❓</div>
                             <div class="activity-info">
                                 <div class="activity-title">Question posée en Espagne</div>
                                 <div class="activity-date">Il y a 3 jours</div>
                             </div>
                         </div>
-                        <div class="activity-item" onclick="viewActivity(2)">
+                        <div class="activity-item">
                             <div class="activity-icon">👍</div>
                             <div class="activity-info">
                                 <div class="activity-title">Voté pour 5 défis</div>
                                 <div class="activity-date">Il y a 1 semaine</div>
                             </div>
                         </div>
-                        <div class="activity-item" onclick="viewActivity(3)">
+                        <div class="activity-item">
                             <div class="activity-icon">🎯</div>
                             <div class="activity-info">
                                 <div class="activity-title">Défi proposé accepté</div>
@@ -601,28 +519,28 @@
                 <div class="section">
                     <div class="section-title">⚡ Actions rapides</div>
                     <div class="action-buttons">
-                        <button class="action-button" onclick="contactGoatTrotters()">
+                        <button class="action-button">
                             <div class="button-left">
                                 <span class="button-icon">💌</span>
                                 <span>Message aux Goat Trotters</span>
                             </div>
                             <span class="button-arrow">›</span>
                         </button>
-                        <button class="action-button" onclick="openWebsite()">
+                        <button class="action-button">
                             <div class="button-left">
                                 <span class="button-icon">🌐</span>
                                 <span>Visiter le site web</span>
                             </div>
                             <span class="button-arrow">›</span>
                         </button>
-                        <button class="action-button" onclick="openSocial()">
+                        <button class="action-button">
                             <div class="button-left">
                                 <span class="button-icon">📱</span>
                                 <span>Réseaux sociaux</span>
                             </div>
                             <span class="button-arrow">›</span>
                         </button>
-                        <button class="action-button" onclick="supportProject()">
+                        <button class="action-button">
                             <div class="button-left">
                                 <span class="button-icon">❤️</span>
                                 <span>Soutenir le projet</span>
@@ -642,13 +560,13 @@
                     <div class="nav-icon">🗺️</div>
                     <div class="nav-label">Carte</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('challenges')">
+                <div class="nav-item" onclick="navigateTo('questions')">
                     <div class="nav-icon">❓</div>
-                    <div class="nav-label">Défis</div>
+                    <div class="nav-label">Questions</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('data')">
-                    <div class="nav-icon">📊</div>
-                    <div class="nav-label">Données</div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">🎯</div>
+                    <div class="nav-label">Défis</div>
                 </div>
                 <div class="nav-item active">
                     <div class="nav-icon">👤</div>
@@ -662,68 +580,7 @@
         </div>
     </div>
 
-    <div class="badge-tooltip" id="mysteryTooltip">
-        🔒 Badge mystère<br>
-        Continuez à participer pour le débloquer !
-    </div>
-
     <script>
-        function editProfile() {
-            alert('✏️ Modifier le profil\n\nCette page permettrait de:\n• Changer la photo de profil\n• Modifier le nom d\'utilisateur\n• Changer la localisation\n• Modifier la bio');
-        }
-
-        function viewStats(type) {
-            const stats = {
-                'questions': 'Vos 12 questions posées avec réponses',
-                'challenges': 'Vos 8 défis proposés avec statut',
-                'countries': 'Les 23 pays que vous suivez'
-            };
-            alert(`📊 ${stats[type]}`);
-        }
-
-        function viewBadge(badge) {
-            const badges = {
-                'question': 'Question posée\n\nVous avez posé votre première question aux habitants !',
-                'challenge': 'Défi réalisé\n\nLes Goat Trotters ont réalisé un de vos défis !',
-                'countries': '10 pays suivis\n\nVous suivez au moins 10 pays du voyage !',
-                'contributor': 'Contributeur\n\nVous participez activement à la communauté !',
-                'voter': 'Top voteur\n\nVous avez voté pour plus de 50 défis !'
-            };
-            alert(`🏆 ${badges[badge]}`);
-        }
-
-        function showMysteryBadge() {
-            const tooltip = document.getElementById('mysteryTooltip');
-            tooltip.classList.add('show');
-            setTimeout(() => {
-                tooltip.classList.remove('show');
-            }, 2000);
-        }
-
-        function viewChallenge(id) {
-            alert(`🎯 Défi #${id}\n\nCette page afficherait:\n• Le défi complet\n• Nombre de votes en temps réel\n• Commentaires\n• Possibilité de modifier`);
-        }
-
-        function viewActivity(id) {
-            alert(`📅 Activité #${id}\n\nDétails de cette activité avec:\n• Description complète\n• Date et heure\n• Lien vers le contenu associé`);
-        }
-
-        function contactGoatTrotters() {
-            alert('💌 Message aux Goat Trotters\n\nCette page ouvrirait:\n• Un formulaire de contact\n• Ou l\'application mail\n• Ou une messagerie intégrée');
-        }
-
-        function openWebsite() {
-            alert('🌐 Ouverture du site\n\nwww.goattrotters.com\n\n(Dans une vraie app, cela ouvrirait le navigateur)');
-        }
-
-        function openSocial() {
-            alert('📱 Réseaux sociaux\n\nChoisissez:\n• Instagram @goattrotters\n• Twitter @goattrotters\n• YouTube Goat Trotters\n• TikTok @goattrotters');
-        }
-
-        function supportProject() {
-            alert('❤️ Soutenir le projet\n\nCette page afficherait:\n• Options de don\n• Devenir mécène\n• Acheter des produits dérivés\n• Partager le projet');
-        }
-
         function navigateTo(page) {
             window.location.href = `goat-trotters-${page}.html`;
         }

@@ -14,7 +14,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
-            background: white;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #ffecd2 50%, #fcb69f 75%, #ffeaa7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,14 +24,22 @@
             padding: 40px 20px;
         }
 
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .iphone-frame {
             width: 393px;
             height: 852px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
             border-radius: 55px;
             padding: 12px;
-            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.3);
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .dynamic-island {
@@ -39,7 +49,8 @@
             transform: translateX(-50%);
             width: 200px;
             height: 37px;
-            background: #000;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
             border-radius: 19px;
             z-index: 10000;
             display: flex;
@@ -48,10 +59,6 @@
             padding: 0 16px;
             transition: all 0.3s;
             cursor: pointer;
-        }
-
-        .dynamic-island:active {
-            transform: translateX(-50%) scale(0.98);
         }
 
         .island-left {
@@ -63,7 +70,7 @@
         .island-artwork {
             width: 24px;
             height: 24px;
-            background: linear-gradient(135deg, #7FB6C2 0%, #FFE79A 100%);
+            background: linear-gradient(135deg, rgba(127, 182, 194, 0.8) 0%, rgba(255, 231, 154, 0.8) 100%);
             border-radius: 6px;
             display: flex;
             align-items: center;
@@ -79,7 +86,7 @@
 
         .wave-bar {
             width: 3px;
-            background: #7FB6C2;
+            background: rgba(127, 182, 194, 0.9);
             border-radius: 2px;
             animation: wave 1s ease-in-out infinite;
         }
@@ -103,11 +110,13 @@
         .iphone-screen {
             width: 100%;
             height: 100%;
-            background: #F7F8F9;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(40px) saturate(180%);
             border-radius: 45px;
             overflow-y: auto;
             overflow-x: hidden;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .iphone-screen::-webkit-scrollbar {
@@ -116,7 +125,8 @@
 
         .status-bar {
             height: 54px;
-            background: white;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
@@ -124,27 +134,21 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
         .status-time {
             font-size: 17px;
             font-weight: 600;
-            letter-spacing: -0.4px;
-        }
-
-        .status-icons {
-            display: flex;
-            gap: 6px;
-            font-size: 14px;
+            color: rgba(0,0,0,0.8);
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(60px) saturate(180%);
             padding: 12px 24px 18px;
             text-align: center;
-            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
             position: sticky;
             top: 54px;
             z-index: 99;
@@ -153,8 +157,9 @@
         .header-title {
             font-size: 26px;
             font-weight: 700;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.8);
             letter-spacing: -0.7px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
 
         .content {
@@ -162,12 +167,14 @@
         }
 
         .now-playing {
-            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
+            background: linear-gradient(135deg, rgba(127, 182, 194, 0.5) 0%, rgba(90, 154, 184, 0.5) 100%);
+            backdrop-filter: blur(30px) saturate(180%);
             margin: 24px;
             border-radius: 24px;
             padding: 24px;
             color: white;
-            box-shadow: 0 8px 32px rgba(127, 182, 194, 0.3);
+            box-shadow: 0 8px 32px rgba(127, 182, 194, 0.3), inset 0 1px 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(127, 182, 194, 0.4);
         }
 
         .now-playing-label {
@@ -182,7 +189,8 @@
         .album-art {
             width: 100%;
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
+            background: linear-gradient(135deg, rgba(255, 231, 154, 0.4) 0%, rgba(247, 181, 160, 0.4) 100%);
+            backdrop-filter: blur(20px);
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -191,6 +199,7 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
             overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.3);
         }
 
         .album-art-image {
@@ -208,6 +217,7 @@
             font-weight: 700;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .episode-location {
@@ -223,6 +233,7 @@
             width: 100%;
             height: 4px;
             background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
             border-radius: 2px;
             margin-bottom: 8px;
             position: relative;
@@ -260,6 +271,7 @@
             opacity: 0.9;
             cursor: pointer;
             transition: all 0.2s;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
         .control-btn:active {
@@ -276,7 +288,7 @@
             font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.5px;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.8);
         }
 
         .filter-tabs {
@@ -291,16 +303,17 @@
         }
 
         .filter-tab {
-            background: #F0F0F0;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 600;
             white-space: nowrap;
-            border: none;
-            color: #666;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(0,0,0,0.6);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .filter-tab:active {
@@ -308,8 +321,10 @@
         }
 
         .filter-tab.active {
-            background: #7FB6C2;
+            background: rgba(127, 182, 194, 0.5);
             color: white;
+            border-color: rgba(127, 182, 194, 0.6);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .episode-list {
@@ -317,15 +332,17 @@
         }
 
         .episode-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(30px) saturate(180%);
             border-radius: 20px;
             padding: 16px;
             margin-bottom: 12px;
             display: flex;
             gap: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 1px rgba(255,255,255,0.3);
             cursor: pointer;
             transition: transform 0.2s;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .episode-card:active {
@@ -335,7 +352,8 @@
         .episode-thumbnail {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%);
+            background: linear-gradient(135deg, rgba(197, 224, 194, 0.5) 0%, rgba(127, 182, 194, 0.5) 100%);
+            backdrop-filter: blur(20px);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -344,6 +362,7 @@
             flex-shrink: 0;
             overflow: hidden;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .episode-thumbnail-image {
@@ -354,29 +373,18 @@
 
         .play-overlay {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 32px;
-            height: 32px;
-            background: rgba(255, 255, 255, 0.9);
+            bottom: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-        }
-
-        .episode-thumbnail.spain {
-            background: linear-gradient(135deg, #FFE79A 0%, #F7B5A0 100%);
-        }
-
-        .episode-thumbnail.france {
-            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
-        }
-
-        .episode-thumbnail.portugal {
-            background: linear-gradient(135deg, #F7B5A0 0%, #E89A8C 100%);
+            font-size: 12px;
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
         .episode-details {
@@ -385,21 +393,23 @@
 
         .episode-country {
             display: inline-block;
-            background: #FFE79A;
+            background: rgba(255, 231, 154, 0.5);
+            backdrop-filter: blur(10px);
             padding: 4px 10px;
             border-radius: 10px;
             font-size: 11px;
             font-weight: 700;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.7);
             margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 231, 154, 0.6);
         }
 
         .episode-card-title {
             font-size: 16px;
             font-weight: 700;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.8);
             margin-bottom: 6px;
             line-height: 1.3;
         }
@@ -409,7 +419,7 @@
             align-items: center;
             gap: 12px;
             font-size: 13px;
-            color: #999;
+            color: rgba(0,0,0,0.5);
         }
 
         .episode-duration {
@@ -418,57 +428,13 @@
             gap: 4px;
         }
 
-        .map-link-section {
-            background: white;
-            margin: 24px;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-        }
-
-        .map-link-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #2B2B2B;
-        }
-
-        .map-link-text {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-
-        .map-button {
-            width: 100%;
-            padding: 14px;
-            background: #7FB6C2;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .map-button:active {
-            transform: scale(0.98);
-        }
-
         .bottom-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(60px) saturate(180%);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            border-top: 0.33px solid rgba(0,0,0,0.04);
+            border-top: 1px solid rgba(255,255,255,0.3);
             position: sticky;
             bottom: 34px;
         }
@@ -477,10 +443,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #8E8E93;
+            color: rgba(0, 0, 0, 0.5);
             padding: 6px 14px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            border-radius: 12px;
         }
 
         .nav-item:active {
@@ -488,7 +455,7 @@
         }
 
         .nav-item.active {
-            color: #7FB6C2;
+            color: rgba(127, 182, 194, 0.9);
         }
 
         .nav-icon {
@@ -503,7 +470,7 @@
 
         .home-indicator {
             height: 34px;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -514,26 +481,17 @@
         .home-bar {
             width: 140px;
             height: 5px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.2);
             border-radius: 3px;
-        }
-
-        .playing {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
         }
     </style>
 </head>
 <body>
     <div class="iphone-frame">
-        <div class="dynamic-island" onclick="togglePlayer()">
+        <div class="dynamic-island">
             <div class="island-left">
                 <div class="island-artwork">🎧</div>
-                <div class="island-waveform" id="waveform">
+                <div class="island-waveform">
                     <div class="wave-bar"></div>
                     <div class="wave-bar"></div>
                     <div class="wave-bar"></div>
@@ -541,7 +499,7 @@
                     <div class="wave-bar"></div>
                 </div>
             </div>
-            <div class="island-play" id="islandPlayBtn">⏸️</div>
+            <div class="island-play">⏸️</div>
         </div>
         
         <div class="iphone-screen">
@@ -569,46 +527,35 @@
                         <div class="episode-location">📍 Andorre-la-Vieille, Andorre</div>
                     </div>
                     <div class="progress-container">
-                        <div class="progress-bar" onclick="seekTo(event)">
-                            <div class="progress-fill" id="progressFill"></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
                         </div>
                         <div class="progress-time">
-                            <span id="currentTime">8:24</span>
-                            <span id="totalTime">21:15</span>
+                            <span>8:24</span>
+                            <span>21:15</span>
                         </div>
                     </div>
                     <div class="player-controls">
-                        <button class="control-btn" onclick="previousTrack()">⏮️</button>
-                        <button class="control-btn" onclick="rewind()">⏪</button>
-                        <button class="control-btn play" id="playBtn" onclick="togglePlay()">⏸️</button>
-                        <button class="control-btn" onclick="forward()">⏩</button>
-                        <button class="control-btn" onclick="nextTrack()">⏭️</button>
+                        <button class="control-btn">⏮️</button>
+                        <button class="control-btn">⏪</button>
+                        <button class="control-btn play">⏸️</button>
+                        <button class="control-btn">⏩</button>
+                        <button class="control-btn">⏭️</button>
                     </div>
-                </div>
-
-                <div class="map-link-section">
-                    <div class="map-link-title">🗺️ Explorer ce lieu</div>
-                    <div class="map-link-text">
-                        Découvrez Andorre sur la carte interactive avec des photos, vidéos et témoignages des habitants.
-                    </div>
-                    <button class="map-button" onclick="navigateTo('map')">
-                        <span>📍</span>
-                        <span>Voir sur la carte</span>
-                    </button>
                 </div>
 
                 <div class="section-title">Tous les épisodes</div>
 
                 <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="filterEpisodes('all')">🌍 Tous les pays</button>
-                    <button class="filter-tab" onclick="filterEpisodes('interview')">🎤 Interviews</button>
-                    <button class="filter-tab" onclick="filterEpisodes('culture')">🎭 Culture</button>
-                    <button class="filter-tab" onclick="filterEpisodes('food')">🍽️ Gastronomie</button>
+                    <button class="filter-tab active">🌍 Tous les pays</button>
+                    <button class="filter-tab">🎤 Interviews</button>
+                    <button class="filter-tab">🎭 Culture</button>
+                    <button class="filter-tab">🍽️ Gastronomie</button>
                 </div>
 
                 <div class="episode-list">
-                    <div class="episode-card" data-category="culture" onclick="playEpisode('barcelona')">
-                        <div class="episode-thumbnail spain">
+                    <div class="episode-card">
+                        <div class="episode-thumbnail">
                             <img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?w=200&h=200&fit=crop" alt="Barcelone" class="episode-thumbnail-image">
                             <div class="play-overlay">▶️</div>
                         </div>
@@ -623,8 +570,8 @@
                         </div>
                     </div>
 
-                    <div class="episode-card" data-category="food" onclick="playEpisode('bordeaux')">
-                        <div class="episode-thumbnail france">
+                    <div class="episode-card">
+                        <div class="episode-thumbnail">
                             <img src="https://images.unsplash.com/photo-1474279174859-19a88b2d72fa?w=200&h=200&fit=crop" alt="Bordeaux" class="episode-thumbnail-image">
                             <div class="play-overlay">▶️</div>
                         </div>
@@ -639,8 +586,8 @@
                         </div>
                     </div>
 
-                    <div class="episode-card" data-category="interview" onclick="playEpisode('porto')">
-                        <div class="episode-thumbnail portugal">
+                    <div class="episode-card">
+                        <div class="episode-thumbnail">
                             <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=200&h=200&fit=crop" alt="Porto" class="episode-thumbnail-image">
                             <div class="play-overlay">▶️</div>
                         </div>
@@ -655,8 +602,8 @@
                         </div>
                     </div>
 
-                    <div class="episode-card" data-category="culture" onclick="playEpisode('valence')">
-                        <div class="episode-thumbnail spain">
+                    <div class="episode-card">
+                        <div class="episode-thumbnail">
                             <img src="https://images.unsplash.com/photo-1562883676-8c7feb83f09b?w=200&h=200&fit=crop" alt="Valence" class="episode-thumbnail-image">
                             <div class="play-overlay">▶️</div>
                         </div>
@@ -670,43 +617,27 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="episode-card" data-category="food" onclick="playEpisode('toulouse')">
-                        <div class="episode-thumbnail france">
-                            <img src="https://images.unsplash.com/photo-1541591022210-e5e1d8d1f0b1?w=200&h=200&fit=crop" alt="Toulouse" class="episode-thumbnail-image">
-                            <div class="play-overlay">▶️</div>
-                        </div>
-                        <div class="episode-details">
-                            <span class="episode-country">🇫🇷 France</span>
-                            <div class="episode-card-title">Boulangeries artisanales toulousaines</div>
-                            <div class="episode-meta">
-                                <span class="episode-duration">🎧 16 min</span>
-                                <span>•</span>
-                                <span>01 Oct 2025</span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="bottom-nav">
-                <div class="nav-item" onclick="navigateTo('home')">
+                <div class="nav-item">
                     <div class="nav-icon">🏠</div>
                     <div class="nav-label">Accueil</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('map')">
+                <div class="nav-item">
                     <div class="nav-icon">🗺️</div>
                     <div class="nav-label">Carte</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('challenges')">
+                <div class="nav-item">
                     <div class="nav-icon">❓</div>
                     <div class="nav-label">Défis</div>
                 </div>
                 <div class="nav-item active">
-                    <div class="nav-icon">📊</div>
-                    <div class="nav-label">Données</div>
+                    <div class="nav-icon">🎧</div>
+                    <div class="nav-label">Podcast</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('profile')">
+                <div class="nav-item">
                     <div class="nav-icon">👤</div>
                     <div class="nav-label">Profil</div>
                 </div>
@@ -717,114 +648,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        let isPlaying = true;
-        let currentProgress = 40; // 40% of 21:15 = 8:24
-
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            const playBtn = document.getElementById('playBtn');
-            const islandPlayBtn = document.getElementById('islandPlayBtn');
-            const waveform = document.getElementById('waveform');
-            
-            if (isPlaying) {
-                playBtn.textContent = '⏸️';
-                islandPlayBtn.textContent = '⏸️';
-                waveform.classList.add('playing');
-            } else {
-                playBtn.textContent = '▶️';
-                islandPlayBtn.textContent = '▶️';
-                waveform.classList.remove('playing');
-            }
-        }
-
-        function togglePlayer() {
-            togglePlay();
-        }
-
-        function rewind() {
-            currentProgress = Math.max(0, currentProgress - 5);
-            updateProgress();
-            alert('⏪ Retour de 15 secondes');
-        }
-
-        function forward() {
-            currentProgress = Math.min(100, currentProgress + 5);
-            updateProgress();
-            alert('⏩ Avance de 15 secondes');
-        }
-
-        function previousTrack() {
-            alert('⏮️ Épisode précédent\n\nLecture de: Boulangeries artisanales toulousaines');
-        }
-
-        function nextTrack() {
-            alert('⏭️ Épisode suivant\n\nLecture de: La vie nocturne à Barcelone');
-        }
-
-        function seekTo(event) {
-            const progressBar = event.currentTarget;
-            const rect = progressBar.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const percentage = (x / rect.width) * 100;
-            currentProgress = Math.max(0, Math.min(100, percentage));
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const progressFill = document.getElementById('progressFill');
-            progressFill.style.width = currentProgress + '%';
-            
-            // Update time (21:15 total)
-            const totalSeconds = 21 * 60 + 15;
-            const currentSeconds = Math.floor((currentProgress / 100) * totalSeconds);
-            const minutes = Math.floor(currentSeconds / 60);
-            const seconds = currentSeconds % 60;
-            document.getElementById('currentTime').textContent = 
-                `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function filterEpisodes(category) {
-            // Update active tab
-            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
-
-            // Filter episodes
-            const episodes = document.querySelectorAll('.episode-card');
-            episodes.forEach(episode => {
-                const episodeCategory = episode.getAttribute('data-category');
-                if (category === 'all' || episodeCategory === category) {
-                    episode.style.display = 'flex';
-                } else {
-                    episode.style.display = 'none';
-                }
-            });
-        }
-
-        function playEpisode(location) {
-            const episodes = {
-                'barcelona': 'La vie nocturne à Barcelone',
-                'bordeaux': 'Les vignerons de Bordeaux',
-                'porto': 'Pêcheurs traditionnels de Porto',
-                'valence': 'Le flamenco à Valence',
-                'toulouse': 'Boulangeries artisanales toulousaines'
-            };
-            
-            alert(`🎧 Lecture de:\n${episodes[location]}\n\nLe lecteur se met à jour avec ce nouvel épisode.`);
-        }
-
-        function navigateTo(page) {
-            window.location.href = `goat-trotters-${page}.html`;
-        }
-
-        // Simulate progress
-        setInterval(() => {
-            if (isPlaying && currentProgress < 100) {
-                currentProgress += 0.1;
-                updateProgress();
-            }
-        }, 1000);
-    </script>
 </body>
 </html>
