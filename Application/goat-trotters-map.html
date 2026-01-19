@@ -16,22 +16,50 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
-            background: white;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #ffecd2 50%, #fcb69f 75%, #ffeaa7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, -100px) scale(1.1); }
+            50% { transform: translate(-50px, -150px) scale(0.9); }
+            75% { transform: translate(-100px, -50px) scale(1.05); }
         }
 
         .iphone-frame {
             width: 393px;
             height: 852px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
             border-radius: 55px;
             padding: 12px;
-            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            box-shadow: 
+                0 50px 100px rgba(0,0,0,0.2),
+                inset 0 1px 1px rgba(255,255,255,0.3);
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .dynamic-island {
@@ -41,12 +69,13 @@
             transform: translateX(-50%);
             width: 126px;
             height: 37px;
-            background: #000;
+            background: rgba(0,0,0,0.9);
             border-radius: 19px;
             z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         .island-icon {
@@ -56,15 +85,17 @@
         .iphone-screen {
             width: 100%;
             height: 100%;
-            background: #F7F8F9;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            backdrop-filter: blur(40px) saturate(180%);
             border-radius: 45px;
             overflow: hidden;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .status-bar {
             height: 54px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(20px);
             display: flex;
             align-items: flex-end;
@@ -75,13 +106,15 @@
             left: 0;
             right: 0;
             z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
 
         .status-time {
             font-size: 17px;
             font-weight: 600;
             letter-spacing: -0.4px;
-            color: #2B2B2B;
+            color: rgba(0,0,0,0.8);
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
 
         .status-icons {
@@ -95,22 +128,23 @@
             top: 54px;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(60px) saturate(180%);
             padding: 16px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 999;
-            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
         }
 
         .back-button {
             font-size: 28px;
-            color: #7FB6C2;
+            color: rgba(127, 182, 194, 0.9);
             cursor: pointer;
             transition: transform 0.2s;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         .back-button:active {
@@ -121,12 +155,15 @@
             font-size: 18px;
             font-weight: 700;
             letter-spacing: -0.5px;
+            color: rgba(0,0,0,0.8);
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
 
         .menu-button {
             font-size: 24px;
             cursor: pointer;
             transition: transform 0.2s;
+            color: rgba(0,0,0,0.6);
         }
 
         .menu-button:active {
@@ -155,17 +192,18 @@
         }
 
         .filter-btn {
-            background: white;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 600;
             white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: none;
-            color: #666;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(0,0,0,0.7);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .filter-btn:active {
@@ -173,8 +211,10 @@
         }
 
         .filter-btn.active {
-            background: #7FB6C2;
+            background: rgba(127, 182, 194, 0.5);
             color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            border-color: rgba(127, 182, 194, 0.6);
         }
 
         .timeline-toggle {
@@ -183,16 +223,18 @@
             right: 20px;
             width: 56px;
             height: 56px;
-            background: white;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
             z-index: 900;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .timeline-toggle:active {
@@ -201,16 +243,20 @@
 
         .location-card {
             position: absolute;
-            bottom: 20px;
+            bottom: 125px;
             left: 20px;
             right: 20px;
-            background: white;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(40px) saturate(180%);
             border-radius: 24px;
             padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.3);
             z-index: 900;
             animation: slideUp 0.3s ease-out;
             display: none;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .location-card.active {
@@ -238,7 +284,8 @@
         .card-image {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #FFE79A 0%, #7FB6C2 100%);
+            background: linear-gradient(135deg, rgba(255, 231, 154, 0.4) 0%, rgba(127, 182, 194, 0.4) 100%);
+            backdrop-filter: blur(10px);
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -246,6 +293,8 @@
             font-size: 36px;
             flex-shrink: 0;
             overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .card-photo {
@@ -263,59 +312,43 @@
             font-weight: 700;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
+            color: rgba(0,0,0,0.8);
+            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
 
         .card-country {
             font-size: 14px;
-            color: #999;
+            color: rgba(0,0,0,0.5);
             margin-bottom: 8px;
         }
 
         .card-date {
             display: inline-block;
-            background: #FFE79A;
-            color: #2B2B2B;
+            background: rgba(255, 231, 154, 0.4);
+            backdrop-filter: blur(10px);
+            color: rgba(0,0,0,0.7);
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
-        }
-
-        .card-gallery {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            overflow-x: auto;
-        }
-
-        .card-gallery::-webkit-scrollbar {
-            display: none;
-        }
-
-        .gallery-item {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%);
-            border-radius: 12px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
+            border: 1px solid rgba(255, 231, 154, 0.5);
         }
 
         .card-button {
             width: 100%;
             padding: 14px;
-            background: #7FB6C2;
+            background: rgba(127, 182, 194, 0.4);
+            backdrop-filter: blur(20px);
             color: white;
-            border: none;
+            border: 1px solid rgba(127, 182, 194, 0.5);
             border-radius: 14px;
             font-size: 16px;
             font-weight: 600;
             letter-spacing: -0.3px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(127, 182, 194, 0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .card-button:active {
@@ -323,41 +356,44 @@
         }
 
         .bottom-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(60px) saturate(180%);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            border-top: 0.33px solid rgba(0,0,0,0.04);
+            border-top: 1px solid rgba(255,255,255,0.3);
             position: absolute;
             bottom: 34px;
             left: 0;
             right: 0;
             z-index: 1000;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.05);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #8E8E93;
+            color: rgba(0, 0, 0, 0.5);
             padding: 6px 14px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            border-radius: 12px;
         }
 
         .nav-item:active {
             transform: scale(0.95);
+            background: rgba(255,255,255,0.2);
         }
 
         .nav-item.active {
-            color: #7FB6C2;
+            color: rgba(127, 182, 194, 0.9);
         }
 
         .nav-icon {
             font-size: 28px;
             margin-bottom: 3px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
         }
 
         .nav-label {
@@ -367,7 +403,7 @@
 
         .home-indicator {
             height: 34px;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -380,14 +416,14 @@
         .home-bar {
             width: 140px;
             height: 5px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.2);
             border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(255,255,255,0.5);
         }
 
-        /* Custom Leaflet Styles */
         .custom-marker {
-            background: white;
-            border: 3px solid #7FB6C2;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid rgba(127, 182, 194, 0.8);
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -396,21 +432,31 @@
             justify-content: center;
             font-size: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
         }
 
         .current-marker {
             animation: pulse-marker 2s infinite;
-            border-color: #FFE79A;
+            border-color: rgba(255, 231, 154, 0.9);
         }
 
         @keyframes pulse-marker {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            }
+            50% { 
+                transform: scale(1.2); 
+                box-shadow: 0 6px 20px rgba(255, 231, 154, 0.6);
+            }
         }
 
         .leaflet-popup-content-wrapper {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
             border-radius: 16px;
             padding: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .leaflet-popup-content {
@@ -422,15 +468,20 @@
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 4px;
+            color: rgba(0,0,0,0.8);
         }
 
         .popup-date {
             font-size: 13px;
-            color: #999;
+            color: rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
+    <div class="particle" style="width: 100px; height: 100px; background: rgba(127,182,194,0.1); top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 150px; height: 150px; background: rgba(255,231,154,0.1); top: 60%; left: 70%; animation-delay: 5s;"></div>
+    <div class="particle" style="width: 80px; height: 80px; background: rgba(197,224,194,0.1); top: 30%; left: 80%; animation-delay: 2s;"></div>
+
     <div class="iphone-frame">
         <div class="dynamic-island">
             <div class="island-icon">🐐</div>
@@ -447,7 +498,7 @@
             </div>
 
             <div class="header">
-                <div class="back-button" onclick="navigateTo('home')">‹</div>
+                <div class="back-button" onclick="alert('Retour')">‹</div>
                 <div class="header-title">Carte du voyage</div>
                 <div class="menu-button">⋯</div>
             </div>
@@ -459,10 +510,9 @@
                 <button class="filter-btn" onclick="filterLocations('mountain')">🏔️ Montagnes</button>
                 <button class="filter-btn" onclick="filterLocations('coast')">🌊 Côtes</button>
                 <button class="filter-btn" onclick="filterLocations('city')">🏙️ Villes</button>
-                <button class="filter-btn" onclick="filterLocations('podcast')">🎧 Podcasts</button>
             </div>
 
-            <div class="timeline-toggle" onclick="toggleTimeline()">
+            <div class="timeline-toggle" onclick="alert('Vue timeline')">
                 📅
             </div>
 
@@ -477,15 +527,7 @@
                         <span class="card-date" id="cardDate">16 Oct 2025</span>
                     </div>
                 </div>
-
-                <div class="card-gallery">
-                    <div class="gallery-item">📸</div>
-                    <div class="gallery-item">🎥</div>
-                    <div class="gallery-item">🎧</div>
-                    <div class="gallery-item">📝</div>
-                </div>
-
-                <button class="card-button" onclick="exploreLocation()">📍 Découvrir ce pays</button>
+                <button class="card-button" onclick="alert('Explorer')">🔍 Découvrir ce pays</button>
             </div>
 
             <div class="bottom-nav">
@@ -497,13 +539,13 @@
                     <div class="nav-icon">🗺️</div>
                     <div class="nav-label">Carte</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('challenges')">
+                <div class="nav-item" onclick="navigateTo('questions')">
                     <div class="nav-icon">❓</div>
-                    <div class="nav-label">Défis</div>
+                    <div class="nav-label">Questions</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('data')">
-                    <div class="nav-icon">📊</div>
-                    <div class="nav-label">Données</div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">🎯</div>
+                    <div class="nav-label">Défis</div>
                 </div>
                 <div class="nav-item" onclick="navigateTo('profile')">
                     <div class="nav-icon">👤</div>
@@ -518,7 +560,6 @@
     </div>
 
     <script>
-        // Données des lieux visités
         const locations = [
             { name: 'Paris', country: 'France', lat: 48.8566, lng: 2.3522, date: '01 Oct 2025', type: 'city', emoji: '🗼', current: false },
             { name: 'Lyon', country: 'France', lat: 45.7640, lng: 4.8357, date: '05 Oct 2025', type: 'city', emoji: '🍷', current: false },
@@ -531,19 +572,16 @@
         let markers = [];
         let polyline;
 
-        // Initialiser la carte
         function initMap() {
             map = L.map('map', {
                 zoomControl: false,
                 attributionControl: false
             }).setView([45.5, 5.0], 6);
 
-            // Ajouter le fond de carte avec style personnalisé
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
             }).addTo(map);
 
-            // Ajouter la ligne de trajet
             const routeCoordinates = locations.map(loc => [loc.lat, loc.lng]);
             polyline = L.polyline(routeCoordinates, {
                 color: '#7FB6C2',
@@ -552,7 +590,6 @@
                 dashArray: '10, 10'
             }).addTo(map);
 
-            // Ajouter les marqueurs
             locations.forEach((location, index) => {
                 const markerIcon = L.divIcon({
                     className: 'custom-div-icon',
@@ -573,32 +610,24 @@
                 markers.push({ marker, location });
             });
 
-            // Ajuster la vue pour voir tous les marqueurs
             map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
         }
 
-        // Afficher la carte de localisation
         function showLocationCard(location) {
             const card = document.getElementById('locationCard');
             document.getElementById('cardTitle').textContent = location.name;
             document.getElementById('cardCountry').textContent = location.country;
             document.getElementById('cardDate').textContent = location.date;
-            
             card.classList.add('active');
-            
-            // Centrer la carte sur le lieu
             map.setView([location.lat, location.lng], 10);
         }
 
-        // Filtrer les locations
         function filterLocations(type) {
-            // Mettre à jour les boutons actifs
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // Filtrer les marqueurs
             markers.forEach(({ marker, location }) => {
                 if (type === 'all' || location.type === type) {
                     marker.addTo(map);
@@ -608,22 +637,10 @@
             });
         }
 
-        // Toggle timeline
-        function toggleTimeline() {
-            alert('Vue timeline - À venir !\nCette fonctionnalité affichera une chronologie du voyage.');
-        }
-
-        // Explorer une location
-        function exploreLocation() {
-            alert('Ouverture de la page détaillée du pays\n\nCette page contiendrait:\n• Photos et vidéos\n• Podcasts\n• Interviews\n• Défis réalisés');
-        }
-
-        // Navigation
         function navigateTo(page) {
             window.location.href = `goat-trotters-${page}.html`;
         }
 
-        // Initialiser la carte au chargement
         window.onload = initMap;
     </script>
 </body>

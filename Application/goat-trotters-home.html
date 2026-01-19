@@ -16,22 +16,51 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
-            background: white;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 25%, #ffecd2 50%, #fcb69f 75%, #ffeaa7 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
+            overflow: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, -100px) scale(1.1); }
+            50% { transform: translate(-50px, -150px) scale(0.9); }
+            75% { transform: translate(-100px, -50px) scale(1.05); }
         }
 
         .iphone-frame {
             width: 393px;
             height: 852px;
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.5);
+            backdrop-filter: blur(20px);
             border-radius: 55px;
             padding: 12px;
-            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            box-shadow: 
+                0 50px 100px rgba(0,0,0,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.1);
             position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .dynamic-island {
@@ -47,6 +76,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         .island-icon {
@@ -56,11 +86,14 @@
         .iphone-screen {
             width: 100%;
             height: 100%;
-            background: #F7F8F9;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
             border-radius: 45px;
             overflow-y: auto;
             overflow-x: hidden;
             position: relative;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .iphone-screen::-webkit-scrollbar {
@@ -69,7 +102,7 @@
 
         .status-bar {
             height: 54px;
-            background: white;
+            background: transparent;
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
@@ -83,6 +116,8 @@
             font-size: 17px;
             font-weight: 600;
             letter-spacing: -0.4px;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .status-icons {
@@ -92,56 +127,87 @@
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(180%);
+            -webkit-backdrop-filter: blur(60px) saturate(180%);
             padding: 12px 24px 18px;
             text-align: center;
-            border-bottom: 0.33px solid rgba(0,0,0,0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
             position: sticky;
             top: 54px;
             z-index: 99;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.1);
         }
 
         .logo-circle {
             width: 52px;
             height: 52px;
             border-radius: 13px;
-            background: linear-gradient(135deg, #7FB6C2 0%, #FFE79A 100%);
+            background: linear-gradient(135deg, rgba(127, 182, 194, 0.9) 0%, rgba(255, 231, 154, 0.9) 100%);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            box-shadow: 
+                0 8px 32px rgba(127, 182, 194, 0.4),
+                inset 0 1px 1px rgba(255,255,255,0.3);
             margin: 0 auto 10px;
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.3);
+            animation: logoPulse 3s ease-in-out infinite;
         }
 
-        .logo-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 32px rgba(127, 182, 194, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 12px 40px rgba(127, 182, 194, 0.6); }
         }
 
         .app-name {
             font-size: 18px;
             font-weight: 700;
-            color: #2B2B2B;
+            color: white;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .map-section {
-            background: white;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
             border-radius: 24px;
             padding: 18px;
             margin: 20px 24px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.25);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .map-section:active {
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:active {
             transform: scale(0.98);
+            box-shadow: 
+                0 4px 16px rgba(0,0,0,0.1),
+                inset 0 1px 1px rgba(255,255,255,0.3);
         }
 
         .map-container {
@@ -150,6 +216,7 @@
             border-radius: 18px;
             overflow: hidden;
             position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         #miniMap {
@@ -162,34 +229,56 @@
             position: absolute;
             bottom: 12px;
             left: 12px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
             padding: 8px 14px;
             border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
-            color: #7FB6C2;
+            color: white;
             z-index: 10;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .story-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px) saturate(180%);
             border-radius: 24px;
             margin: 20px 24px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.3);
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.25);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .story-card:active {
+            transform: scale(0.98);
         }
 
         .story-image {
             width: 100%;
             height: 240px;
-            background: linear-gradient(135deg, #FFE79A 0%, #7FB6C2 100%);
+            background: linear-gradient(135deg, rgba(255, 231, 154, 0.3) 0%, rgba(127, 182, 194, 0.3) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 64px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .story-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
         }
 
         .story-photo {
@@ -200,17 +289,21 @@
 
         .story-content {
             padding: 22px;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .story-label {
             display: inline-block;
-            background: #FFE79A;
-            color: #2B2B2B;
+            background: rgba(255, 231, 154, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 231, 154, 0.4);
+            color: white;
             padding: 7px 16px;
             border-radius: 22px;
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .story-title {
@@ -218,12 +311,15 @@
             font-weight: 700;
             margin-bottom: 10px;
             letter-spacing: -0.5px;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         .story-text {
             font-size: 16px;
             line-height: 1.45;
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .section-title {
@@ -232,17 +328,22 @@
             margin: 32px 0 16px;
             padding: 0 24px;
             letter-spacing: -0.7px;
-            color: #2B2B2B;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .journey-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px) saturate(180%);
             border-radius: 24px;
             margin: 16px 24px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.3);
             overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.25);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .journey-card:active {
@@ -257,6 +358,17 @@
             justify-content: center;
             font-size: 56px;
             overflow: hidden;
+            position: relative;
+        }
+
+        .journey-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
         }
 
         .journey-photo {
@@ -265,16 +377,9 @@
             object-fit: cover;
         }
 
-        .journey-image.mountain {
-            background: linear-gradient(135deg, #C5E0C2 0%, #7FB6C2 100%);
-        }
-
-        .journey-image.sea {
-            background: linear-gradient(135deg, #7FB6C2 0%, #5A9AB8 100%);
-        }
-
         .journey-info {
             padding: 18px 20px 20px;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .journey-location {
@@ -282,17 +387,19 @@
             font-weight: 700;
             margin-bottom: 5px;
             letter-spacing: -0.5px;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .journey-date {
             font-size: 14px;
-            color: #999;
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 12px;
         }
 
         .journey-caption {
             font-size: 16px;
-            color: #666;
+            color: rgba(255, 255, 255, 0.85);
             line-height: 1.4;
         }
 
@@ -311,7 +418,28 @@
             letter-spacing: -0.4px;
             margin-bottom: 14px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn:active {
@@ -319,58 +447,63 @@
         }
 
         .btn-primary {
-            background: #7FB6C2;
+            background: rgba(127, 182, 194, 0.4);
             color: white;
-            box-shadow: 0 6px 20px rgba(127,182,194,0.3);
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 8px 24px rgba(127,182,194,0.4);
+            box-shadow: 
+                0 8px 24px rgba(127,182,194,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(127, 182, 194, 0.5);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .btn-secondary {
-            background: #FFE79A;
-            color: #2B2B2B;
-            box-shadow: 0 6px 20px rgba(255,231,154,0.3);
-        }
-
-        .btn-secondary:hover {
-            box-shadow: 0 8px 24px rgba(255,231,154,0.4);
+            background: rgba(255, 231, 154, 0.4);
+            color: white;
+            box-shadow: 
+                0 8px 24px rgba(255,231,154,0.3),
+                inset 0 1px 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255, 231, 154, 0.5);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .bottom-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(60px) saturate(180%);
+            -webkit-backdrop-filter: blur(60px) saturate(180%);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            border-top: 0.33px solid rgba(0,0,0,0.04);
+            border-top: 1px solid rgba(255,255,255,0.2);
             position: sticky;
             bottom: 34px;
+            box-shadow: 0 -4px 30px rgba(0,0,0,0.1);
         }
 
         .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #8E8E93;
+            color: rgba(255, 255, 255, 0.6);
             padding: 6px 14px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
         }
 
         .nav-item:active {
             transform: scale(0.95);
+            background: rgba(255,255,255,0.1);
         }
 
         .nav-item.active {
-            color: #7FB6C2;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .nav-icon {
             font-size: 28px;
             margin-bottom: 3px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
         .nav-label {
@@ -380,7 +513,7 @@
 
         .home-indicator {
             height: 34px;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -391,14 +524,15 @@
         .home-bar {
             width: 140px;
             height: 5px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.4);
             border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         /* Custom Leaflet Styles */
         .custom-marker {
-            background: white;
-            border: 3px solid #7FB6C2;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid rgba(127, 182, 194, 0.8);
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -406,42 +540,34 @@
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
         }
 
         .current-marker {
             animation: pulse-marker 2s infinite;
-            border-color: #FFE79A;
+            border-color: rgba(255, 231, 154, 0.9);
         }
 
         @keyframes pulse-marker {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
-
-        .leaflet-popup-content-wrapper {
-            border-radius: 12px;
-            padding: 6px;
-        }
-
-        .leaflet-popup-content {
-            margin: 10px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .popup-title {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .popup-date {
-            font-size: 11px;
-            color: #999;
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            }
+            50% { 
+                transform: scale(1.15); 
+                box-shadow: 0 6px 20px rgba(255, 231, 154, 0.6);
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Floating particles -->
+    <div class="particle" style="width: 100px; height: 100px; background: rgba(255,255,255,0.1); top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 150px; height: 150px; background: rgba(127,182,194,0.1); top: 60%; left: 70%; animation-delay: 5s;"></div>
+    <div class="particle" style="width: 80px; height: 80px; background: rgba(255,231,154,0.1); top: 30%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 120px; height: 120px; background: rgba(197,224,194,0.1); top: 70%; left: 10%; animation-delay: 7s;"></div>
+
     <div class="iphone-frame">
         <div class="dynamic-island">
             <div class="island-icon">🐐</div>
@@ -458,13 +584,11 @@
             </div>
 
             <div class="header">
-                <div class="logo-circle">
-                    <img src="logo.png" alt="Goat Trotters Logo" class="logo-image">
-                </div>
+                <div class="logo-circle">🐐</div>
                 <div class="app-name">Goat Trotters</div>
             </div>
 
-            <div class="map-section" onclick="navigateTo('map')">
+            <div class="glass-card" onclick="navigateTo('map')">
                 <div class="map-container">
                     <div id="miniMap"></div>
                     <div class="map-overlay">🗺️ Voir le trajet complet</div>
@@ -485,7 +609,7 @@
             <div class="section-title">Dernières étapes</div>
 
             <div class="journey-card" onclick="navigateTo('gallery')">
-                <div class="journey-image mountain">
+                <div class="journey-image">
                     <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop" alt="Andorre" class="journey-photo">
                 </div>
                 <div class="journey-info">
@@ -496,7 +620,7 @@
             </div>
 
             <div class="journey-card" onclick="navigateTo('gallery')">
-                <div class="journey-image sea">
+                <div class="journey-image">
                     <img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?w=800&h=400&fit=crop" alt="Barcelone" class="journey-photo">
                 </div>
                 <div class="journey-info">
@@ -507,12 +631,12 @@
             </div>
 
             <div class="cta-buttons">
-                <button class="btn btn-primary" onclick="navigateTo('map')">📍 Suivre notre trajet en direct</button>
+                <button class="btn btn-primary" onclick="navigateTo('map')">🗺 Suivre notre trajet en direct</button>
                 <button class="btn btn-secondary" onclick="navigateTo('challenges')">💬 Proposer une question ou un défi</button>
             </div>
 
             <div class="bottom-nav">
-                <div class="nav-item active" onclick="navigateTo('home')">
+                <div class="nav-item active">
                     <div class="nav-icon">🏠</div>
                     <div class="nav-label">Accueil</div>
                 </div>
@@ -520,13 +644,13 @@
                     <div class="nav-icon">🗺️</div>
                     <div class="nav-label">Carte</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('challenges')">
+                <div class="nav-item" onclick="navigateTo('questions')">
                     <div class="nav-icon">❓</div>
-                    <div class="nav-label">Défis</div>
+                    <div class="nav-label">Questions</div>
                 </div>
-                <div class="nav-item" onclick="navigateTo('data')">
-                    <div class="nav-icon">📊</div>
-                    <div class="nav-label">Données</div>
+                <div class="nav-item" onclick="navigateTo('challenges')">
+                    <div class="nav-icon">🎯</div>
+                    <div class="nav-label">Défis</div>
                 </div>
                 <div class="nav-item" onclick="navigateTo('profile')">
                     <div class="nav-icon">👤</div>
@@ -541,7 +665,6 @@
     </div>
 
     <script>
-        // Données des lieux visités
         const locations = [
             { name: 'Paris', lat: 48.8566, lng: 2.3522, emoji: '🗼', current: false },
             { name: 'Lyon', lat: 45.7640, lng: 4.8357, emoji: '🍷', current: false },
@@ -552,7 +675,6 @@
 
         let miniMap;
 
-        // Initialiser la mini carte
         function initMiniMap() {
             miniMap = L.map('miniMap', {
                 zoomControl: false,
@@ -565,12 +687,10 @@
                 attributionControl: false
             }).setView([45.5, 5.0], 5);
 
-            // Ajouter le fond de carte
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
             }).addTo(miniMap);
 
-            // Ajouter la ligne de trajet
             const routeCoordinates = locations.map(loc => [loc.lat, loc.lng]);
             const polyline = L.polyline(routeCoordinates, {
                 color: '#7FB6C2',
@@ -579,7 +699,6 @@
                 dashArray: '8, 8'
             }).addTo(miniMap);
 
-            // Ajouter les marqueurs
             locations.forEach((location) => {
                 const markerIcon = L.divIcon({
                     className: 'custom-div-icon',
@@ -592,7 +711,6 @@
                     .addTo(miniMap);
             });
 
-            // Ajuster la vue pour voir tous les marqueurs
             miniMap.fitBounds(polyline.getBounds(), { padding: [30, 30] });
         }
 
@@ -600,7 +718,6 @@
             window.location.href = `goat-trotters-${page}.html`;
         }
 
-        // Initialiser la carte au chargement
         window.onload = () => {
             setTimeout(initMiniMap, 100);
         };
