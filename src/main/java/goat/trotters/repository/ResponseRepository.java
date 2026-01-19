@@ -13,11 +13,8 @@ import java.util.List;
 @Repository
 public interface ResponseRepository extends JpaRepository<Response, Long> {
 
-    // Vérifie si un utilisateur a déjà répondu
     boolean existsByUserIdAndQuestionId(String userId, Long questionId);
 
-    // 🎯 C'est la méthode clé pour ta Heatmap
-    // Requête dynamique avec filtres optionnels
     @Query("SELECT r.country, r.answer, COUNT(r) " +
             "FROM Response r " +
             "WHERE r.question.id = :questionId " +
@@ -34,18 +31,15 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
             @Param("maxAge") Integer maxAge
     );
 
-    // Suppression totale (Optimisé en JPQL)
     @Modifying
     @Transactional
-    @Query("DELETE FROM Response r") // Plus sûr que le nativeQuery
+    @Query("DELETE FROM Response r")
     void deleteAllResponses();
 
-    // Suppression par utilisateur (Ajout de @Transactional obligatoire ici)
     @Modifying
     @Transactional
     void deleteByUserId(String userId);
 
-    // Stats globales pour d'autres graphiques
     @Query("SELECT r.country, COUNT(r) FROM Response r GROUP BY r.country")
     List<Object[]> countByCountry();
 
