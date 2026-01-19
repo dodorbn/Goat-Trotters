@@ -1,15 +1,12 @@
 package goat.trotters.config;
 
 import goat.trotters.model.Question;
-import goat.trotters.model.Response;
+import goat.trotters.model.QuestionType;
 import goat.trotters.repository.QuestionRepository;
 import goat.trotters.repository.ResponseRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 public class DataInitializer {
@@ -17,78 +14,148 @@ public class DataInitializer {
     @Bean
     CommandLineRunner initDatabase(QuestionRepository questionRepo, ResponseRepository responseRepo) {
         return args -> {
-            // On vérifie si la base est vide pour ne pas dupliquer à chaque redémarrage
-            if (questionRepo.count() == 0) {
-                System.out.println("🚀 Initialisation de la base de données...");
+            responseRepo.deleteAll();
+            questionRepo.deleteAll();
 
-                // 1. Création des Questions
-                Question q1 = new Question();
-                q1.setText("Pensez-vous que l'écologie est une priorité en Europe ?");
-                q1.setDescription("Cette question concerne les politiques environnementales de l'UE");
-                q1 = questionRepo.save(q1); // Important : on récupère l'objet avec son ID généré
+            // --- 1. BIEN-ÊTRE ---
+            saveQuestion(questionRepo,
+                    "Sur une échelle de 1 à 10, à quel point êtes-vous heureux de vivre dans ce pays ?",
+                    "Bien-être", QuestionType.SCORE, null);
 
-                Question q2 = new Question();
-                q2.setText("Croyez-vous que les jeunes ont assez de pouvoir politique ?");
-                q2.setDescription("Impact de la jeunesse sur les décisions politiques européennes");
-                q2 = questionRepo.save(q2);
+            saveQuestion(questionRepo,
+                    "Si vous deviez vivre dans un autre pays européen, lequel choisiriez-vous ?",
+                    "Bien-être", QuestionType.CHOICE,
+                    "France;Allemagne;Italie;Espagne;Pologne;Roumanie;Pays-Bas;Belgique;Grèce;Portugal;Suède;Hongrie;Autriche;République tchèque;Irlande;Danemark;Finlande;Slovaquie;Norvège");
 
-                Question q3 = new Question();
-                q3.setText("L'Union Européenne aide-t-elle suffisamment les citoyens ?");
-                q3.setDescription("Évaluation des programmes d'aide et de soutien de l'UE");
-                q3 = questionRepo.save(q3);
+            // --- 2. POLITIQUE ---
+            saveQuestion(questionRepo,
+                    "Allez-vous voter lors des prochaines élections ?",
+                    "Politique", QuestionType.CHOICE,
+                    "Oui;Peut-être;Non;Je ne vote pas");
 
-                // 2. Création des Réponses (liées aux questions ci-dessus)
-                List<Response> responses = new ArrayList<>();
+            saveQuestion(questionRepo,
+                    "Avez-vous confiance en vos politiciens pour améliorer votre quotidien ?",
+                    "Politique", QuestionType.CHOICE,
+                    "Confiance;Mitigé;Aucune confiance");
 
-                // --- FRANCE (Mixte : 50% Oui / 50% Non) ---
-                responses.add(createResponse("user1", 25, "France", "Oui", q1));
-                responses.add(createResponse("user2", 30, "France", "Non", q1));
-                responses.add(createResponse("user3", 22, "France", "Oui", q1));
-                responses.add(createResponse("user4", 45, "France", "Non", q1));
+            // --- 3. EUROPE ---
+            saveQuestion(questionRepo,
+                    "Globalement, l'Union Européenne est-elle...",
+                    "Europe", QuestionType.CHOICE,
+                    "Une chance;Une contrainte;Indifférent");
 
-                // --- GERMANY (Sceptique : Beaucoup de Non) ---
-                // "Germany" et pas "Allemagne" pour matcher le GeoJSON
-                responses.add(createResponse("user5", 35, "Germany", "Non", q1));
-                responses.add(createResponse("user6", 40, "Germany", "Non", q1));
-                responses.add(createResponse("user7", 28, "Germany", "Non", q1));
-                responses.add(createResponse("user8", 55, "Germany", "Oui", q1));
+            // --- 4. CULTURE ---
+            saveQuestion(questionRepo,
+                    "Selon vous, la culture est-elle primordiale ?",
+                    "Culture", QuestionType.CHOICE,
+                    "Oui;Non;Indifférent");
 
-                // --- SPAIN (Optimiste : Beaucoup de Oui) ---
-                responses.add(createResponse("user9", 25, "Spain", "Oui", q1));
-                responses.add(createResponse("user10", 29, "Spain", "Oui", q1));
-                responses.add(createResponse("user11", 32, "Spain", "Oui", q1));
+            saveQuestion(questionRepo,
+                    "Quelle place occupe le sport dans votre vie ?",
+                    "Culture", QuestionType.CHOICE,
+                    "Je pratique régulièrement;Je pratique occasionnellement;Je regarde seulement à la télé;Ça ne m'intéresse pas");
 
-                // --- ITALY (Mitigé) ---
-                responses.add(createResponse("user12", 24, "Italy", "Non", q1));
-                responses.add(createResponse("user13", 26, "Italy", "Oui", q1));
+            // --- 5. ÉCOLOGIE ---
+            saveQuestion(questionRepo,
+                    "Au quotidien, votre engagement écologique est... ?",
+                    "Écologie", QuestionType.CHOICE,
+                    "Fort (actions concrètes);Modéré (petits gestes);Faible (ce n'est pas ma priorité)");
 
-                // --- Réponses pour la Question 2 (Jeunesse) ---
-                responses.add(createResponse("user1", 25, "France", "Oui", q2));
-                responses.add(createResponse("user5", 35, "Germany", "Non", q2));
-                responses.add(createResponse("user9", 25, "Spain", "Oui", q2));
+            saveQuestion(questionRepo,
+                    "Votre pays en fait-il assez pour lutter contre le dérèglement climatique ?",
+                    "Écologie", QuestionType.CHOICE,
+                    "Oui;Non, pas assez;C'est aux autres pays d'agir");
 
-                // Sauvegarde en masse (optimisé)
-                responseRepo.saveAll(responses);
+            // --- 6. RÉSEAUX SOCIAUX ---
+            saveQuestion(questionRepo,
+                    "Combien de temps passez-vous par jour sur les réseaux sociaux ?",
+                    "Réseaux sociaux", QuestionType.CHOICE,
+                    "Moins d'1h;1h à 3h;Plus de 3h");
 
-                System.out.println("✅ Base de données initialisée avec succès !");
-                System.out.println("📊 " + responses.size() + " réponses ajoutées pour tester la Heatmap.");
-            } else {
-                System.out.println("ℹ️ La base contient déjà des données, pas d'initialisation.");
-            }
+            saveQuestion(questionRepo,
+                    "Globalement, les réseaux sociaux ont un impact...",
+                    "Réseaux sociaux", QuestionType.CHOICE,
+                    "Positif;Négatif");
+
+            // --- 7. INTELLIGENCE ARTIFICIELLE ---
+            saveQuestion(questionRepo,
+                    "Utilisez-vous l'IA ? Dans quelles circonstances ?",
+                    "IA", QuestionType.MULTIPLE_CHOICE,
+                    "Oui (Pro);Oui (Perso);Non");
+
+            saveQuestion(questionRepo,
+                    "L'Intelligence Artificielle (IA) vous fait-elle peur ?",
+                    "IA", QuestionType.CHOICE,
+                    "Oui;Non");
+
+            // --- 8. SOCIÉTÉ ---
+            saveQuestion(questionRepo,
+                    "Êtes-vous satisfait de votre pouvoir d’achat ?",
+                    "Société", QuestionType.CHOICE,
+                    "Oui;Ça va;Non");
+
+            saveQuestion(questionRepo,
+                    "Dans la vie, quelle est votre priorité absolue ?",
+                    "Société", QuestionType.CHOICE,
+                    "Réussite Pro & Argent;Temps libre & Loisirs;Famille & Amis");
+
+            // --- 9. VALEURS & INÉGALITÉS ---
+            saveQuestion(questionRepo,
+                    "Diriez-vous que l'égalité hommes-femmes est acquise ici ?",
+                    "Valeurs & Inégalités", QuestionType.CHOICE,
+                    "Oui, totalement;En progrès;Non, pas du tout");
+
+            saveQuestion(questionRepo,
+                    "Trouvez-vous que votre société est tolérante envers les minorités ?",
+                    "Valeurs & Inégalités", QuestionType.CHOICE,
+                    "Très tolérante;Plutôt tolérante;Pas assez tolérante");
+
+            saveQuestion(questionRepo,
+                    "Selon vous, est-il facile de trouver un emploi dans votre pays aujourd'hui ?",
+                    "Valeurs & Inégalités", QuestionType.CHOICE,
+                    "Oui, ça recrute;C'est compliqué;C'est impossible");
+
+            // --- 10. RELIGION ---
+            saveQuestion(questionRepo,
+                    "Quelle place occupe la religion dans votre vie ?",
+                    "Religion", QuestionType.CHOICE,
+                    "Croyant et pratiquant;Croyant mais non pratiquant;Athée ou Agnostique");
+
+            saveQuestion(questionRepo,
+                    "Selon vous, la religion doit-elle rester strictement privée ?",
+                    "Religion", QuestionType.CHOICE,
+                    "Oui, sphère privée uniquement;Non, elle peut être visible");
+
+            // --- 11. SANTÉ ---
+            saveQuestion(questionRepo,
+                    "Êtes-vous satisfait de votre système de santé public ?",
+                    "Santé", QuestionType.CHOICE,
+                    "Oui;Moyennement;Non");
+
+            saveQuestion(questionRepo,
+                    "Que pensez-vous de la légalisation de la mort assistée (Euthanasie) ?",
+                    "Santé", QuestionType.CHOICE,
+                    "Pour;Contre;Mitigé");
+
+            // --- 12. BONUS ---
+            saveQuestion(questionRepo,
+                    "Quel est le cliché sur votre pays qui est totalement vrai ?",
+                    "Cliché Pays", QuestionType.TEXT, null);
+
+            saveQuestion(questionRepo,
+                    "Un seul mot pour décrire l'Europe ?",
+                    "Nuage de Mots", QuestionType.TEXT, null);
+
+            System.out.println("✅ Base de données initialisée (24 questions, 0 réponses).");
         };
     }
 
-    // Méthode utilitaire pour créer une réponse proprement
-    private Response createResponse(String userId, int age, String country, String answer, Question q) {
-        Response r = new Response();
-        r.setUserId(userId);
-        r.setAge(age);
-        r.setCountry(country);
-        r.setAnswer(answer);
-        r.setQuestion(q);
-        // Valeurs par défaut pour les champs obligatoires mais moins importants ici
-        r.setCategory("TestUser");
-        r.setGender("Other");
-        return r;
+    private void saveQuestion(QuestionRepository repo, String text, String desc, QuestionType type, String options) {
+        Question q = new Question();
+        q.setText(text);
+        q.setDescription(desc);
+        q.setType(type);
+        q.setPossibleAnswers(options);
+        repo.save(q);
     }
 }

@@ -67,7 +67,6 @@ const currentYear = new Date().getFullYear();
 </template>
 
 <style scoped>
-/* --- CONFIGURATION GLOBALE --- */
 .footer-container {
   background-color: #120c24;
   border-top: 1px solid #D4AF37;
@@ -82,7 +81,6 @@ const currentYear = new Date().getFullYear();
   margin: 0 auto;
 }
 
-/* --- PARTIE HAUTE --- */
 .footer-top {
   display: flex;
   justify-content: space-between;
@@ -92,7 +90,6 @@ const currentYear = new Date().getFullYear();
   margin-bottom: 2rem;
 }
 
-/* Marque */
 .brand-title {
   font-size: 1.8rem;
   color: white;
@@ -111,7 +108,6 @@ const currentYear = new Date().getFullYear();
   letter-spacing: 0.5px;
 }
 
-/* Réseaux Sociaux */
 .social-column h4 {
   color: #D4AF37;
   font-size: 1rem;
@@ -143,7 +139,6 @@ const currentYear = new Date().getFullYear();
   width: 20px;
   height: 20px;
   object-fit: contain;
-  /* ✅ Suppression du filtre d'inversion : les couleurs restent naturelles */
 }
 
 .social-name {
@@ -153,7 +148,6 @@ const currentYear = new Date().getFullYear();
   transition: color 0.3s;
 }
 
-/* Hover Effect */
 .social-card:hover {
   background: #D4AF37;
   border-color: #D4AF37;
@@ -162,17 +156,15 @@ const currentYear = new Date().getFullYear();
 }
 
 .social-card:hover .social-name {
-  color: #120c24; /* Texte foncé sur fond or */
+  color: #120c24;
 }
 
-/* --- SÉPARATEUR --- */
 .separator {
   height: 1px;
   background: linear-gradient(90deg, transparent, #333, transparent);
   margin: 2rem 0;
 }
 
-/* --- PARTIE BASSE --- */
 .footer-bottom {
   display: flex;
   justify-content: space-between;

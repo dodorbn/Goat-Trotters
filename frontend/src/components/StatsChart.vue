@@ -6,83 +6,153 @@ import {
   Tooltip,
   Legend,
   BarElement,
+  ArcElement,
   CategoryScale,
   LinearScale
 } from 'chart.js'
-import { Bar } from 'vue-chartjs'
+import { Bar, Pie } from 'vue-chartjs'
+import { getColorForText } from '@/assets/colors'
 
-// 1. Enregistrement des composants Chart.js obligatoires
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Title, Tooltip, Legend)
 
-// 2. On reçoit les stats depuis le parent
 const props = defineProps<{
-  stats: any[]
+  stats: any[],
+  questionType?: string
 }>()
 
-// 3. Transformation des données pour le Graphique
 const chartData = computed(() => {
-  // On trie les pays pour mettre ceux qui ont le plus de "Oui" en premier (plus lisible)
-  const sortedStats = [...props.stats].sort((a, b) => b.yes - a.yes)
-
-  return {
-    labels: sortedStats.map(s => s.country), // Axe X : Les pays
-    datasets: [
-      {
-        label: 'Oui',
-        backgroundColor: '#D4AF37', // Ta couleur Dorée
-        data: sortedStats.map(s => s.yes),
+  if (props.questionType === 'SCORE') {
+    const labels = props.stats.map(s => s.country)
+    const averages = props.stats.map(stat => {
+      const counts = stat.counts || {}
+      let total = 0, sum = 0
+      Object.entries(counts).forEach(([score, count]) => {
+        sum += Number(score) * Number(count)
+        total += Number(count)
+      })
+      return total === 0 ? 0 : (sum / total).toFixed(2)
+    })
+    return {
+      labels,
+      datasets: [{
+        label: 'Moyenne / 10',
+        backgroundColor: '#D4AF37',
+        data: averages,
         borderRadius: 4
-      },
-      {
-        label: 'Non',
-        backgroundColor: '#444444', // Gris foncé
-        data: sortedStats.map(s => s.no),
-        borderRadius: 4
+      }]
+    }
+  } else if (props.questionType === 'CHOICE' || props.questionType === 'MULTIPLE_CHOICE') {
+    const globalCounts: Record<string, number> = {}
+    props.stats.forEach(stat => {
+      if (stat.counts) {
+        Object.entries(stat.counts).forEach(([answer, count]) => {
+          globalCounts[answer] = (globalCounts[answer] || 0) + Number(count)
+        })
       }
-    ]
+    })
+    const labels = Object.keys(globalCounts).sort()
+    const data = labels.map(label => globalCounts[label])
+    const backgroundColor = labels.map(label => getColorForText(label))
+
+    return {
+      labels,
+      datasets: [{
+        data: data,
+        backgroundColor: backgroundColor,
+        borderWidth: 2,
+        borderColor: '#2a2245'
+      }]
+    }
   }
+  return { labels: [], datasets: [] }
 })
 
-// 4. Options de configuration (Couleurs, Responsive, etc.)
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      labels: { color: 'white' } // Légende en blanc
-    },
-    tooltip: {
-      callbacks: {
-        label: (context: any) => `${context.dataset.label}: ${context.raw}%`
+const chartOptions = computed(() => {
+  const isPie = props.questionType === 'CHOICE' || props.questionType === 'MULTIPLE_CHOICE'
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: { color: 'white', font: { size: 13 } },
+        position: isPie ? 'bottom' : 'top'
+      },
+      title: {
+        display: true,
+        text: isPie ? 'Répartition Globale (Total Europe)' : 'Moyenne par Pays',
+        color: '#aaa',
+        font: { size: 16 }
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            const val = context.raw
+            if (isPie) {
+              const total = context.dataset.data.reduce((a: any, b: any) => a + b, 0)
+              const percent = Math.round((val / total) * 100)
+              return ` ${context.label}: ${percent}% (${val} votes)`
+            }
+            return ` Note: ${val}/10`
+          }
+        }
       }
-    }
-  },
-  scales: {
-    x: {
-      ticks: { color: 'white' },
-      grid: { display: false }
     },
-    y: {
-      beginAtZero: true,
-      max: 100, // Echelle fixe de 0 à 100%
-      ticks: { color: 'white' },
-      grid: { color: '#333' }
+    scales: isPie ? {} : {
+      x: { ticks: { color: 'white' }, grid: { display: false } },
+      y: { beginAtZero: true, max: 10, ticks: { color: 'white' }, grid: { color: '#333' } }
     }
   }
-}
+})
 </script>
 
 <template>
-  <div class="chart-wrapper">
-    <Bar :data="chartData" :options="chartOptions" />
+  <div class="chart-root">
+    <div v-if="questionType === 'CHOICE' || questionType === 'MULTIPLE_CHOICE'" class="pie-wrapper">
+      <div class="pie-sizer">
+        <Pie :data="chartData" :options="chartOptions" />
+      </div>
+    </div>
+
+    <div v-else-if="questionType === 'SCORE'" class="bar-wrapper">
+      <Bar :data="chartData" :options="chartOptions" />
+    </div>
+
+    <div v-else class="no-chart">Pas de graphique</div>
   </div>
 </template>
 
 <style scoped>
-.chart-wrapper {
-  position: relative;
+.chart-root {
+  width: 100%;
+  height: 100%;
+}
+
+.pie-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100%;
   width: 100%;
-  padding: 1rem;
+}
+
+.pie-sizer {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  height: 100%;
+}
+
+.bar-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.no-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #aaa;
 }
 </style>

@@ -9,7 +9,7 @@ const form = ref({
 })
 
 const loading = ref(false)
-const successMessage = ref(false) // Pour afficher le message de confirmation
+const successMessage = ref(false)
 const errorMessage = ref('')
 
 const sendEmail = async () => {
@@ -17,7 +17,6 @@ const sendEmail = async () => {
   errorMessage.value = ''
   successMessage.value = false
 
-  // Remplacer ces valeurs par celles de ton compte EmailJS
   const SERVICE_ID = 'service_qz0a6pp'
   const TEMPLATE_ID = 'template_p449wsg'
   const PUBLIC_KEY = '1C1VC_Z_SQjvmXAtS'
@@ -31,9 +30,8 @@ const sendEmail = async () => {
   try {
     await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
 
-    // Succès !
     successMessage.value = true
-    form.value = { name: '', subject: '', message: '' } // Reset du formulaire
+    form.value = { name: '', subject: '', message: '' }
   } catch (error) {
     console.error('Erreur envoi email:', error)
     errorMessage.value = "Une erreur est survenue. Veuillez réessayer plus tard."
@@ -134,7 +132,7 @@ const sendEmail = async () => {
 </template>
 
 <style scoped>
-/* --- GLOBAL LAYOUT --- */
+
 .page-container {
   min-height: 100vh;
   background-color: #1b1336;
@@ -175,7 +173,6 @@ const sendEmail = async () => {
   border-radius: 2px;
 }
 
-/* --- CONTENT GRID --- */
 .content-wrapper {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -184,7 +181,6 @@ const sendEmail = async () => {
   width: 100%;
 }
 
-/* --- INFO CARD (GAUCHE) --- */
 .info-card {
   background: #2a2245;
   padding: 2.5rem;
@@ -252,7 +248,6 @@ const sendEmail = async () => {
   pointer-events: none;
 }
 
-/* --- FORMULAIRE (DROITE) --- */
 .contact-form {
   background: #2a2245;
   padding: 2.5rem;
@@ -327,7 +322,6 @@ textarea {
 
 .arrow { font-size: 1.2rem; }
 
-/* --- ALERTES --- */
 .alert {
   padding: 1rem;
   border-radius: 8px;
@@ -348,7 +342,6 @@ textarea {
   color: #f44336;
 }
 
-/* --- ANIMATIONS --- */
 .fade-in-left { animation: fadeInLeft 0.8s ease; }
 .fade-in-right { animation: fadeInRight 0.8s ease; }
 
@@ -362,7 +355,6 @@ textarea {
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* --- RESPONSIVE --- */
 @media (max-width: 850px) {
   .content-wrapper {
     grid-template-columns: 1fr;

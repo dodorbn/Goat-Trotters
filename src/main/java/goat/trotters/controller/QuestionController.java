@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/questions")
-@CrossOrigin(origins = "*")
 public class QuestionController {
 
     private final QuestionRepository repository;
@@ -20,7 +19,7 @@ public class QuestionController {
 
     @GetMapping
     public List<Question> getAll() {
-        return repository.findAll();
+        return repository.findAllByOrderById();
     }
 
     @PostMapping

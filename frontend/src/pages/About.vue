@@ -129,8 +129,7 @@ const toggleCard = (id) => {
 </template>
 
 <style scoped>
-/* --- GLOBALS --- */
-/* (Je remets box-sizing: border-box globalement pour éviter les soucis futurs) */
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -160,13 +159,10 @@ const toggleCard = (id) => {
 .card h3 { color: #fff; margin-bottom: 0.5rem; font-size: 1.2rem; }
 .card p { color: #aaa; font-size: 0.9rem; }
 
-
-/* --- FONDATEURS (CORRIGÉ) --- */
-
 .founders-grid {
   display: flex;
   justify-content: center;
-  gap: 2rem; /* Espace suffisant */
+  gap: 2rem;
   flex-wrap: wrap;
   margin-bottom: 4rem;
 }
@@ -174,14 +170,13 @@ const toggleCard = (id) => {
 .founder-card {
   width: 240px;
   height: 320px;
-  perspective: 1500px; /* Profondeur augmentée pour réduire l'effet de "swing" large */
+  perspective: 1500px;
   cursor: pointer;
   background-color: transparent;
   position: relative;
-  z-index: 1; /* Niveau de base */
+  z-index: 1;
 }
 
-/* ⚡️ CORRECTION CHEVAUCHEMENT : La carte active passe au premier plan */
 .founder-card:hover, .founder-card.flipped {
   z-index: 10;
 }
@@ -193,7 +188,6 @@ const toggleCard = (id) => {
   text-align: center;
   transition: transform 0.6s ease-in-out;
   transform-style: preserve-3d;
-  /* ⚡️ CORRECTION TRANSLATION : Centre strict */
   transform-origin: 50% 50%;
 }
 
@@ -201,7 +195,6 @@ const toggleCard = (id) => {
   transform: rotateY(180deg);
 }
 
-/* --- Style des faces --- */
 .card-face {
   position: absolute;
   top: 0;
@@ -227,7 +220,6 @@ const toggleCard = (id) => {
   border-color: #666;
 }
 
-/* --- FACE AVANT --- */
 .card-front {
   z-index: 2;
   transform: rotateY(0deg);
@@ -248,7 +240,6 @@ const toggleCard = (id) => {
 .flip-icon { color: #555; font-size: 1.2rem; transition: transform 0.3s; }
 .founder-card:hover .flip-icon { color: #D4AF37; transform: rotate(180deg); }
 
-/* --- FACE ARRIÈRE --- */
 .card-back {
   transform: rotateY(180deg);
   justify-content: center;
@@ -260,7 +251,6 @@ const toggleCard = (id) => {
 .card-back p { color: #e0e0e0; font-size: 0.9rem; line-height: 1.5; }
 
 
-/* --- CTA --- */
 .join-us-banner { background: linear-gradient(135deg, #2a2245 0%, #1b1336 100%); width: 100%; max-width: 800px; padding: 2.5rem; border-radius: 16px; text-align: center; border: 1px solid #D4AF37; }
 .join-us-banner h2 { color: white; margin-bottom: 0.5rem; font-size: 1.5rem; }
 .join-us-banner p { color: #ccc; margin-bottom: 1.5rem; font-size: 1rem; }

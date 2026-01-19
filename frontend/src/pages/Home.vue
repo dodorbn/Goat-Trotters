@@ -97,7 +97,7 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 </template>
 
 <style scoped>
-/* --- CONFIG GLOBALE --- */
+
 .home-container {
   min-height: 100vh;
   background-color: #1b1336;
@@ -106,10 +106,9 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
   overflow-x: hidden;
 }
 
-/* --- HERO SECTION --- */
 .hero-section {
   position: relative;
-  height: 80vh; /* Prend presque tout l'écran */
+  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -119,7 +118,6 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
   overflow: hidden;
 }
 
-/* Effet de fond subtil */
 .hero-bg {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
@@ -174,7 +172,6 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
   justify-content: center;
 }
 
-/* --- SECTION TRACKER (POLARSTEPS) --- */
 .tracker-section {
   padding: 4rem 2rem;
   display: flex;
@@ -229,7 +226,7 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 
 .btn-polarsteps {
   display: inline-block;
-  background: #ff4d4d; /* Couleur brand Polarsteps ou proche */
+  background: #ff4d4d;
   color: white;
   padding: 15px 30px;
   border-radius: 50px;
@@ -239,7 +236,6 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 }
 .btn-polarsteps:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 77, 77, 0.3); }
 
-/* Partie visuelle droite du tracker */
 .tracker-visual {
   flex: 1;
   background: #150f29;
@@ -262,8 +258,6 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 .pin { font-size: 4rem; animation: bounce 2s infinite; }
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-
-/* --- SECTION MEDIAS --- */
 .section { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
 .section-header { text-align: center; margin-bottom: 3rem; }
 .section-header h2 { font-size: 2.5rem; color: #D4AF37; font-weight: 300; }
@@ -307,10 +301,10 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 .card-link:hover { gap: 10px; }
 
 .adventure-card.coming-soon {
-  border: 1px dashed #666; /* Bordure pointillée pour l'effet "travaux" */
-  background: rgba(42, 34, 69, 0.5); /* Un peu plus transparent */
-  position: relative; /* Pour positionner le badge */
-  cursor: default; /* Pas de main au survol */
+  border: 1px dashed #666;
+  background: rgba(42, 34, 69, 0.5);
+  position: relative;
+  cursor: default;
 }
 
 .adventure-card.coming-soon:hover {
@@ -343,10 +337,9 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 
 .card-link.disabled:hover {
   text-decoration: none;
-  color: #888; /* Reste gris au survol */
+  color: #888;
 }
 
-/* --- CTA SECTION --- */
 .cta-section { margin-top: 4rem; text-align: center; }
 .cta-content {
   background: linear-gradient(45deg, #D4AF37, #B8952D);
@@ -358,7 +351,6 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
 .cta-content h2 { font-size: 2.5rem; margin-bottom: 1rem; font-weight: 800; }
 .cta-content p { font-size: 1.2rem; margin-bottom: 2rem; font-weight: 500; }
 
-/* BOUTONS GENERIQUES */
 .btn-primary {
   background: #D4AF37; color: #1b1336;
   padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold;
@@ -388,14 +380,12 @@ const polarstepsUrl = "https://www.polarsteps.com/DorianRobineau/16926536-road-t
   100% { box-shadow: 0 0 0 0 rgba(27, 19, 54, 0); }
 }
 
-/* --- ANIMATION ENTREE --- */
 .fade-in-up { animation: fadeInUp 1s ease-out; }
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(40px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .hero-section h1 { font-size: 2.5rem; }
   .tracker-card { flex-direction: column; }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// Aucune logique complexe ici
 </script>
 
 <template>
@@ -30,25 +29,21 @@
 </template>
 
 <style scoped>
-/* --- CONTAINER PRINCIPAL --- */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.8rem 2rem;
 
-  /* Couleur de fond sombre et solide (comme le footer) */
   background-color: #120c24;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2); /* Ligne dorée subtile en bas */
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 
-  /* Effet Sticky : La barre reste en haut au scroll */
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* --- LOGO --- */
 .brand-group {
   display: flex;
   align-items: center;
@@ -62,7 +57,7 @@
 }
 
 .logo {
-  height: 50px; /* Taille ajustée pour ne pas prendre trop de place */
+  height: 50px;
   width: auto;
   object-fit: contain;
 }
@@ -73,10 +68,9 @@
   font-weight: 800;
   letter-spacing: 1px;
   text-transform: uppercase;
-  margin: 0; /* Reset des marges par défaut */
+  margin: 0;
 }
 
-/* --- LIENS --- */
 .nav-links {
   list-style: none;
   display: flex;
@@ -95,18 +89,15 @@
   padding: 5px 0;
 }
 
-/* Effet Hover */
 .nav-item:hover {
   color: #D4AF37;
 }
 
-/* Lien Actif (Page courante) */
 .router-link-active {
   color: #D4AF37;
   font-weight: bold;
 }
 
-/* Petite ligne dorée animée sous le lien actif */
 .nav-item::after {
   content: '';
   position: absolute;
@@ -126,7 +117,6 @@
   width: 100%;
 }
 
-/* --- BOUTON DROITE --- */
 .btn-contact {
   background: transparent;
   color: #D4AF37;
@@ -146,7 +136,6 @@
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
 
-/* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem;
@@ -164,7 +153,7 @@
   }
 
   .nav-actions {
-    display: none; /* On cache le bouton contact sur très petit écran pour gagner de la place */
+    display: none;
   }
 }
 </style>

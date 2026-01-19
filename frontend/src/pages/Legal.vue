@@ -3,7 +3,6 @@ import { ref } from 'vue'
 
 const activeTab = ref('mentions') // 'mentions' ou 'privacy'
 
-// Fonction pour changer d'onglet
 const setTab = (tab: string) => {
   activeTab.value = tab
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -150,7 +149,7 @@ const currentDate = new Date().toLocaleDateString('fr-FR')
 </template>
 
 <style scoped>
-/* --- CONFIGURATION GLOBALE --- */
+
 .page-container {
   min-height: 100vh;
   background-color: #1b1336;
@@ -162,7 +161,6 @@ const currentDate = new Date().toLocaleDateString('fr-FR')
   align-items: center;
 }
 
-/* --- HEADER & TABS --- */
 .header {
   text-align: center;
   margin-bottom: 3rem;
@@ -218,7 +216,6 @@ const currentDate = new Date().toLocaleDateString('fr-FR')
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-/* --- CONTENU --- */
 .content-wrapper {
   max-width: 900px;
   width: 100%;
@@ -259,7 +256,6 @@ a {
 }
 a:hover { color: white; }
 
-/* Listes */
 .details-list {
   list-style: none;
   padding: 0;
@@ -299,7 +295,6 @@ a:hover { color: white; }
   margin-bottom: 1rem;
 }
 
-/* --- GRILLE DES DROITS --- */
 .rights-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -326,7 +321,6 @@ a:hover { color: white; }
   color: #888;
 }
 
-/* --- ANIMATION --- */
 .fade-in {
   animation: fadeIn 0.5s ease-out;
 }

@@ -18,4 +18,15 @@ public class Question {
 
     @Column(nullable = false)
     private String description;
+
+    // ✅ NOUVEAU : Le type de question (SCORE, CHOICE, etc.)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private QuestionType type;
+
+    // ✅ NOUVEAU : Les choix possibles séparés par des ";"
+    // Ex: "Voiture;Vélo;Transports en commun"
+    // Null si c'est une question de type SCORE ou TEXT
+    @Column(length = 1000) // On prévoit de la place
+    private String possibleAnswers;
 }
