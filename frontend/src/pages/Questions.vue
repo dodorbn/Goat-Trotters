@@ -10,8 +10,7 @@ const error = ref('')
 const success = ref(false)
 const currentStep = ref(1)
 
-// URL de l'API
-const API_URL = 'http://localhost:8080/api'
+const API_URL = '/api'
 
 const countryMapping: Record<string, string> = {
   'Allemagne': 'Germany', 'Autriche': 'Austria', 'Belgique': 'Belgium', 'Bulgarie': 'Bulgaria',

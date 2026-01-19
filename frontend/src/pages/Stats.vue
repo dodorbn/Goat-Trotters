@@ -6,6 +6,8 @@ import 'leaflet/dist/leaflet.css'
 import StatsChart from "@/components/StatsChart.vue"
 import { getColorForText } from '@/assets/colors'
 
+const API_URL = '/api'
+
 const questions = ref<any[]>([])
 const selectedQuestionId = ref<number | null>(null)
 const stats = ref<any[]>([])
@@ -32,7 +34,8 @@ const hasActiveFilters = computed(() => {
 
 const loadQuestions = async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/questions')
+    // 👇 CHANGEMENT ICI : Utilisation de API_URL
+    const res = await axios.get(`${API_URL}/questions`)
     questions.value = res.data
   } catch (err) {
     console.error(err)
@@ -53,7 +56,7 @@ const loadStats = async () => {
       maxAge = max
     }
 
-    const response = await axios.get(`http://localhost:8080/api/responses/stats/${selectedQuestionId.value}`, {
+    const response = await axios.get(`${API_URL}/responses/stats/${selectedQuestionId.value}`, {
       params: {
         gender: filters.value.gender || null,
         category: filters.value.category || null,
@@ -217,9 +220,9 @@ const shouldShowChart = computed(() => {
   const idsToHide = [2, 23, 24]
   if (idsToHide.includes(selectedQuestionId.value)) return false
 
-  return currentQuestion.value?.type !== 'TEXT';
+  if (currentQuestion.value?.type === 'TEXT') return false
 
-
+  return true
 })
 
 const getRandomColor = () => {
