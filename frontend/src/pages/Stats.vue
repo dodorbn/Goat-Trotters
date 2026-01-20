@@ -6,7 +6,9 @@ import 'leaflet/dist/leaflet.css'
 import StatsChart from "@/components/StatsChart.vue"
 import { getColorForText } from '@/assets/colors'
 
-const API_URL = '/api'
+const API_URL = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api`
+  : '/api'
 
 const questions = ref<any[]>([])
 const selectedQuestionId = ref<number | null>(null)
