@@ -10,7 +10,9 @@ const error = ref('')
 const success = ref(false)
 const currentStep = ref(1)
 
-const API_URL = '/api'
+const API_URL = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api`
+  : '/api'
 
 const countryMapping: Record<string, string> = {
   'Allemagne': 'Germany', 'Autriche': 'Austria', 'Belgique': 'Belgium', 'Bulgarie': 'Bulgaria',
