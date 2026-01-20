@@ -1,8 +1,8 @@
 ### Obtenir toutes les réponses
-GET http://localhost:8080/api/responses
+GET https://goattrotters-api.onrender.com/api/responses
 
 ### Créer une nouvelle réponse
-POST http://localhost:8080/api/responses
+POST https://goattrotters-api.onrender.com/api/responses
 Content-Type: application/json
 
 {
@@ -18,16 +18,16 @@ Content-Type: application/json
 }
 
 ### Supprimer une réponse spécifique
-DELETE http://localhost:8080/api/responses/1
+DELETE https://goattrotters-api.onrender.com/api/responses/1
 
 ### Supprimer toutes les réponses d'un utilisateur
-DELETE http://localhost:8080/api/responses/user/user123
+DELETE https://goattrotters-api.onrender.com/api/responses/user/user123
 
 ### Supprimer toutes les réponses
-DELETE http://localhost:8080/api/responses
+DELETE https://goattrotters-api.onrender.com/api/responses
 
 ### Test de doublon (devrait retourner un conflit)
-POST http://localhost:8080/api/responses
+POST https://goattrotters-api.onrender.com/api/responses
 Content-Type: application/json
 
 {
