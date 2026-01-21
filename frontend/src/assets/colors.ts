@@ -15,18 +15,19 @@ export const forcedColors: Record<string, string> = {
   'Oui': '#3cb44b', 'Oui, totalement': '#3cb44b', 'Oui (Pro)': '#3cb44b',
   'Oui (Perso)': '#808000', 'Pour': '#3cb44b', 'Une chance': '#3cb44b',
   'Confiance': '#3cb44b', 'Positif': '#3cb44b', 'Très tolérante': '#3cb44b',
-  'Fort (actions concrètes)': '#3cb44b', 'Je pratique régulièrement' :'#3cb44b',
+  'Fort (actions concrètes)': '#3cb44b', 'Je pratique régulièrement' :'#3cb44b','Oui, ça recrute': '#3cb44b',
 
   // Négatif (Rouges)
   'Non': '#e6194b', 'Non, jamais': '#e6194b', 'Non, pas du tout': '#e6194b',
   'Contre': '#e6194b', 'Une contrainte': '#e6194b', 'Aucune confiance': '#e6194b',
   'Négatif': '#e6194b', 'Pas assez tolérante': '#e6194b',
-  'Faible (ce n\'est pas ma priorité)': '#e6194b',
+  'Faible (ce n\'est pas ma priorité)': '#e6194b','Non, pas assez':'#e6194b',
 
   // Neutre / Mitigé
-  'Peut-être': '#ffe119', 'Mitigé': '#f58231',
-  'Indifférent': '#cccccc', 'Je ne vote pas': '#cccccc',
-  'Ça va': '#4363d8', 'Moyennement': '#f58231', 'C\'est compliqué': '#f58231', 'Je pratique occasionnellement' :'#f58231'
+  'Peut-être': '#ffe119', 'Mitigé': '#f58231', 'Modéré (petits gestes)': '#f58231',
+  'Indifférent': '#cccccc', 'Je ne vote pas': '#cccccc','Réussite Pro & Argent': '#ffe119',
+  'Ça va': '#4363d8', 'Moyennement': '#f58231', 'C\'est compliqué': '#f58231', 'Je pratique occasionnellement' :'#f58231',
+  'Plutôt tolérante':'#f58231','Famille & Amis' : '#911eb4','Croyant mais non pratiquant': '#911eb4',
 }
 
 // 3. La fonction exportée pour récupérer la couleur
