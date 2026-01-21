@@ -99,17 +99,42 @@ const submitForm = async () => {
   loading.value = true
   error.value = ''
 
+  for (let i = 0; i < questions.value.length; i++) {
+    const q = questions.value[i];
+    const rawAnswer = String(answers.value[i] || "").trim();
+
+    if (q.text.toLowerCase().includes("un seul mot") && rawAnswer.includes(" ")) {
+      error.value = `Oups ! Pour la question "${q.text}", merci de n'écrire qu'un seul mot (sans espace).`;
+      loading.value = false;
+      return;
+    }
+  }
+
   try {
     const promises = questions.value.map((q, index) => {
-      const englishCountry = countryMapping[form.value.country] || form.value.country
-      const finalAnswer = String(answers.value[index])
+      let englishCountry = countryMapping[form.value.country] || form.value.country
+      if (englishCountry) englishCountry = englishCountry.toUpperCase();
+
+      let finalAnswer = answers.value[index];
+      if (finalAnswer === undefined || finalAnswer === null) finalAnswer = "";
+      finalAnswer = String(finalAnswer).trim();
+
+      if (q.type === 'TEXT') {
+        if (q.text.toLowerCase().includes("un seul mot")) {
+          finalAnswer = finalAnswer.split(' ')[0];
+        }
+
+        if (finalAnswer.length > 0) {
+          finalAnswer = finalAnswer.charAt(0).toUpperCase() + finalAnswer.slice(1).toLowerCase();
+        }
+      }
 
       const payload = {
         userId: userId.value,
         age: Number(form.value.age),
         country: englishCountry,
-        category: form.value.category,
-        gender: form.value.gender,
+        category: form.value.category ? form.value.category.toUpperCase() : "AUTRE",
+        gender: form.value.gender ? form.value.gender.toUpperCase() : "AUTRE",
         answer: finalAnswer,
         question: { id: q.id }
       }
@@ -269,12 +294,28 @@ const submitForm = async () => {
           </div>
 
           <div v-else-if="q.type === 'TEXT'" class="text-container">
+
+            <div v-if="q.text.toLowerCase().includes('cliché')">
+              <input
+                type="text"
+                v-model="answers[index]"
+                maxlength="30"
+                placeholder="En quelques mots... (Ex: Toujours en grève)"
+                class="custom-input"
+              >
+              <div class="char-count">
+                {{ answers[index] ? answers[index].length : 0 }} / 30 caractères max
+              </div>
+            </div>
+
             <textarea
+              v-else
               v-model="answers[index]"
               rows="2"
               placeholder="Écrivez votre réponse ici..."
               class="custom-input"
             ></textarea>
+
           </div>
 
         </div>
@@ -470,5 +511,12 @@ textarea.custom-input {
   background: #2a2245;
   border-radius: 5px;
   border: 1px solid #444;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 5px;
 }
 </style>
