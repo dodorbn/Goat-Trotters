@@ -17,7 +17,34 @@ const loading = ref(true)
 const error = ref('')
 
 const zoomLevel = ref(0.6)
-const resetZoom = () => zoomLevel.value = 0.6
+const pan = ref({ x: 0, y: 0 })
+const isDragging = ref(false)
+const lastMousePos = ref({ x: 0, y: 0 })
+
+const resetZoom = () => {
+  zoomLevel.value = 0.6
+  pan.value = { x: 0, y: 0 }
+}
+
+const startDrag = (e: MouseEvent) => {
+  isDragging.value = true
+  lastMousePos.value = { x: e.clientX, y: e.clientY }
+}
+
+const onDrag = (e: MouseEvent) => {
+  if (!isDragging.value) return
+  const deltaX = e.clientX - lastMousePos.value.x
+  const deltaY = e.clientY - lastMousePos.value.y
+
+  pan.value.x += deltaX
+  pan.value.y += deltaY
+
+  lastMousePos.value = { x: e.clientX, y: e.clientY }
+}
+
+const stopDrag = () => {
+  isDragging.value = false
+}
 
 const showFilters = ref(false)
 const filters = ref({
@@ -37,7 +64,6 @@ const hasActiveFilters = computed(() => {
   return filters.value.gender !== '' || filters.value.category !== '' || filters.value.ageRange !== ''
 })
 
-// Détection du type de question TEXTE
 const isClicheQuestion = computed(() => {
   return currentQuestion.value?.type === 'TEXT' && currentQuestion.value?.text.toLowerCase().includes('cliché')
 })
@@ -95,7 +121,6 @@ const initMap = () => {
   if (map) return;
 
   map = L.map(mapContainer, { center: [54, 15], zoom: 4, minZoom: 3 })
-
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; CARTO', subdomains: 'abcd', maxZoom: 19
   }).addTo(map)
@@ -119,14 +144,8 @@ const initMap = () => {
 
 const updateMapColors = () => {
   if (!geoLayer || !currentQuestion.value) return
-
   geoLayer.eachLayer((layer: any) => {
-    layer.setStyle({
-      fillColor: '#333',
-      fillOpacity: 0.3,
-      color: '#555',
-      weight: 1
-    })
+    layer.setStyle({ fillColor: '#333', fillOpacity: 0.3, color: '#555', weight: 1 })
     layer.unbindTooltip()
     if (layer.feature.properties.NAME) layer.bindTooltip(layer.feature.properties.NAME)
   })
@@ -137,47 +156,33 @@ const updateMapColors = () => {
   geoLayer.eachLayer((layer: any) => {
     const props = layer.feature.properties
     const geoName = props.NAME || props.name || props.ADMIN
-
-    const countryStat = stats.value.find((s: any) =>
-      s.country.toLowerCase() === geoName.toLowerCase()
-    )
+    const countryStat = stats.value.find((s: any) => s.country.toLowerCase() === geoName.toLowerCase())
 
     if (countryStat && countryStat.counts) {
       const counts = countryStat.counts
       const total = Object.values(counts).reduce((a: any, b: any) => a + b, 0) as number
-
       let color = '#D4AF37'
       let tooltipContent = `<strong>${geoName}</strong><br/>`
 
       if (currentQuestion.value.type === 'SCORE') {
         let sum = 0
-        Object.entries(counts).forEach(([score, count]) => {
-          sum += Number(score) * (count as number)
-        })
+        Object.entries(counts).forEach(([score, count]) => { sum += Number(score) * (count as number) })
         const average = total > 0 ? sum / total : 0
-
         const hue = ((average - 1) / 9) * 120
         color = `hsl(${hue}, 70%, 45%)`
         tooltipContent += `Moyenne : <strong>${average.toFixed(1)} / 10</strong><br/><small>${total} avis</small>`
       }
-
       else if (currentQuestion.value.type === 'CHOICE' || currentQuestion.value.type === 'MULTIPLE_CHOICE') {
         let maxCount = 0
         let dominantAnswer = ''
-
         Object.entries(counts).forEach(([answer, count]) => {
           const val = count as number
-          if (val > maxCount) {
-            maxCount = val
-            dominantAnswer = answer
-          }
+          if (val > maxCount) { maxCount = val; dominantAnswer = answer }
         })
-
         const percent = Math.round((maxCount / total) * 100)
         color = getColorForText(dominantAnswer)
         tooltipContent += `Majorité : <span style="color:${color}">●</span> <strong>${dominantAnswer}</strong> (${percent}%)<br/><small>${total} avis</small>`
       }
-
       layer.setStyle({ fillColor: color, fillOpacity: 0.7, weight: 1, color: 'white' })
       layer.bindTooltip(`<div style="text-align: center;">${tooltipContent}</div>`)
     }
@@ -213,10 +218,10 @@ const wordCloudData = computed(() => {
       }
     })
   })
+
   return Object.entries(totalCounts)
     .map(([text, value]) => ({
-      text,
-      value,
+      text, value,
       size: 1 + ((value / maxFreq) * 3)
     }))
     .sort((a, b) => b.value - a.value)
@@ -296,21 +301,34 @@ const getRandomColor = () => {
           <button @click="resetZoom" class="btn-reset-zoom">Reboot 🔄</button>
         </div>
 
-        <div v-if="wordCloudData.length > 0" class="zoom-viewport">
-          <div class="zoom-content" :style="{ transform: `scale(${zoomLevel})` }">
+        <div
+          class="zoom-viewport interactive"
+          @mousedown="startDrag"
+          @mousemove="onDrag"
+          @mouseup="stopDrag"
+          @mouseleave="stopDrag"
+          :class="{ 'grabbing': isDragging }"
+        >
+          <div
+            class="zoom-content"
+            :style="{
+               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoomLevel})`
+             }"
+          >
               <span
                 v-for="word in wordCloudData"
                 :key="word.text"
-                class="cloud-word zoom-item"
-                :style="{ fontSize: (1 + Math.min(word.size, 3)) + 'rem', color: getRandomColor() }"
+                class="cloud-word zoom-item card-style"
+                :style="{ fontSize: (1 + Math.min(word.size, 3)) + 'rem' }"
                 :title="word.value + ' occurrences'"
               >
                 {{ word.text }}
+                <span v-if="word.value > 1" class="count-badge">x{{ word.value }}</span>
               </span>
           </div>
         </div>
         <div v-else class="empty-cloud"><p>Pas encore de données.</p></div>
-        <p class="hint">Zoomez pour explorer les réponses.</p>
+        <p class="hint">Cliquez et glissez pour déplacer • Zoomez pour explorer</p>
       </div>
 
       <div v-else-if="currentQuestion?.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
@@ -343,7 +361,6 @@ const getRandomColor = () => {
           </div>
         </div>
       </div>
-
     </div>
 
     <div v-if="shouldShowChart" class="charts-section fade-in">
@@ -377,40 +394,29 @@ const getRandomColor = () => {
   background: #222;
 }
 .map { width: 100%; height: 100%; z-index: 1; }
-
-.map-legend {
-  position: absolute; bottom: 30px; right: 30px;
-  background: rgba(18, 12, 36, 0.95);
-  padding: 15px; border-radius: 8px; border: 1px solid #555;
-  z-index: 500; max-width: 250px;
-}
+.map-legend { position: absolute; bottom: 30px; right: 30px; background: rgba(18, 12, 36, 0.95); padding: 15px; border-radius: 8px; border: 1px solid #555; z-index: 500; max-width: 250px; }
 .legend-content { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
-.gradient-bar-score {
-  width: 100px; height: 10px;
-  background: linear-gradient(to right, #ff0000, #ffff00, #00ff00);
-  border-radius: 4px;
-}
+.gradient-bar-score { width: 100px; height: 10px; background: linear-gradient(to right, #ff0000, #ffff00, #00ff00); border-radius: 4px; }
 .legend-choices { display: flex; flex-direction: column; gap: 5px; }
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
 .color-dot { width: 12px; height: 12px; border-radius: 50%; display: block; }
 
-/* CONTROLS */
 .control-panel { background: #2a2245; padding: 1.5rem; border-radius: 12px; border: 1px solid #444; margin-bottom: 2rem; }
+.main-select { margin-bottom: 0; /* Nettoyage marge interne */ }
 .loading-overlay { position: absolute; inset: 0; background: rgba(27,19,54,0.8); display: flex; align-items: center; justify-content: center; z-index: 10; }
 .spinner { width: 40px; height: 40px; border: 4px solid rgba(212,175,55,0.3); border-top-color: #D4AF37; border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-select {
-  width: 100%; padding: 0.8rem; padding-right: 2.5rem;
-  border-radius: 8px; background: #1b1336; color: white; border: 1px solid #555;
-  cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none;
-}
-
+select { width: 100%; padding: 0.8rem; padding-right: 2.5rem; border-radius: 8px; background: #1b1336; color: white; border: 1px solid #555; cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
 .charts-section { margin-top: 3rem; }
 .chart-container { background: #2a2245; padding: 1rem; border-radius: 16px; height: 500px; width: 100%; position: relative; }
 .no-data { text-align: center; padding: 2rem; color: #888; background: #2a2245; margin-top: 2rem; border-radius: 8px; }
 
-.toggle-row { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+.toggle-row {
+  display: flex; justify-content: center; gap: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
 .btn-toggle-filters { background: transparent; color: #D4AF37; border: 1px solid #D4AF37; padding: 8px 24px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
 .btn-toggle-filters:hover, .btn-toggle-filters.active { background: #D4AF37; color: #1b1336; }
 .btn-reset { background: rgba(255,107,107,0.1); color: #ff6b6b; border: 1px solid #ff6b6b; padding: 8px 18px; border-radius: 50px; cursor: pointer; transition: all 0.3s; }
@@ -422,44 +428,47 @@ label { display: block; color: #D4AF37; font-weight: bold; font-size: 0.9rem; te
 .select-wrapper { position: relative; }
 .arrow-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #D4AF37; pointer-events: none; }
 
-.word-cloud-box {
-  width: 100%; height: 100%;
-  background: radial-gradient(circle, #2a2245 0%, #1b1336 100%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  overflow: hidden; padding: 2rem; position: relative;
-}
+.word-cloud-box { width: 100%; height: 100%; background: radial-gradient(circle, #2a2245 0%, #1b1336 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 2rem; position: relative; }
 .empty-cloud { color: #777; font-style: italic; }
 .cloud-word { font-family: 'Segoe UI', sans-serif; font-weight: bold; cursor: default; transition: transform 0.3s ease, text-shadow 0.3s ease; line-height: 1.1; }
 .cloud-word:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); z-index: 10; }
 
-.zoom-mode { padding: 0; }
-.zoom-controls {
-  position: absolute; top: 20px; z-index: 100;
-  display: flex; gap: 10px; align-items: center;
-  background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 50px;
-  backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1);
-}
+.zoom-mode { padding: 0; cursor: grab; }
+.zoom-controls { position: absolute; top: 20px; z-index: 100; display: flex; gap: 10px; align-items: center; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 50px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
 .zoom-slider { cursor: pointer; accent-color: #D4AF37; width: 100px; }
 .zoom-controls button { background: #333; color: white; border: 1px solid #555; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center;}
 .zoom-controls button:hover { background: #555; }
 .btn-reset-zoom { border-radius: 12px !important; width: auto !important; padding: 0 10px; font-size: 0.8rem; }
 
-.zoom-viewport {
-  width: 100%; height: 100%;
-  overflow: auto;
-  display: flex; justify-content: center; align-items: center;
-}
-.zoom-content {
-  width: 1500px; height: 1500px;
-  display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; align-content: center;
-  transform-origin: center center;
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-.zoom-item { white-space: nowrap; }
-.hint { position: absolute; bottom: 20px; color: #888; font-size: 0.8rem; font-style: italic; }
+.zoom-viewport { width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+.interactive:active { cursor: grabbing; }
 
-.tag-cloud-container {
-  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;
-  max-width: 900px;
+.zoom-content {
+  display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; align-content: center;
+  width: 1500px; height: 1500px;
+  transform-origin: center center;
 }
+
+.card-style {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  white-space: nowrap;
+}
+.card-style:hover { background: #D4AF37; color: #1b1336 !important; border-color: #D4AF37; }
+
+.count-badge {
+  background: rgba(0,0,0,0.3);
+  font-size: 0.6em;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.hint { position: absolute; bottom: 20px; color: #888; font-size: 0.8rem; font-style: italic; pointer-events: none; }
+.tag-cloud-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; max-width: 900px; }
 </style>
