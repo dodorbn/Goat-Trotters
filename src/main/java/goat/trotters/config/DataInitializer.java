@@ -92,7 +92,7 @@ public class DataInitializer {
             saveQuestion(questionRepo,
                     "Êtes-vous satisfait de votre pouvoir d’achat ?",
                     "Société", QuestionType.CHOICE,
-                    "Oui;Ça va;Non");
+                    "Oui;Moyennement;Non");
 
             saveQuestion(questionRepo,
                     "Dans la vie, quelle est votre priorité absolue ?",

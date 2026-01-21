@@ -226,25 +226,19 @@ const submitForm = async () => {
             </div>
           </div>
 
-          <div v-else-if="q.type === 'COUNTRY' || q.text.includes('vivre dans')" class="input-group">
+          <div v-else-if="q.type === 'COUNTRY' || q.text.includes('résidence') || q.text.includes('vivre dans')" class="input-group">
             <select v-model="answers[index]" class="custom-input">
+
               <option :value="undefined" disabled>-- Choisir un pays --</option>
+
+              <option v-if="q.text.includes('vivre dans')" value="Aucun">
+                Aucun / Je reste dans mon pays
+              </option>
+
               <option v-for="(enName, frName) in countryMapping" :key="enName" :value="enName">
                 {{ frName }}
               </option>
             </select>
-          </div>
-
-          <div v-else-if="q.type === 'CHOICE'" class="choices-container">
-            <button
-              v-for="opt in getOptions(q)"
-              :key="opt"
-              class="choice-btn"
-              :class="{ selected: answers[index] === opt }"
-              @click="answers[index] = opt"
-            >
-              {{ opt }}
-            </button>
           </div>
 
           <div v-else-if="q.type === 'MULTIPLE_CHOICE'" class="multiple-choice-wrapper">
