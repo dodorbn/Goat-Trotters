@@ -3,7 +3,6 @@ package goat.trotters.config;
 import goat.trotters.model.Question;
 import goat.trotters.model.QuestionType;
 import goat.trotters.repository.QuestionRepository;
-import goat.trotters.repository.ResponseRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +11,11 @@ import org.springframework.context.annotation.Configuration;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initDatabase(QuestionRepository questionRepo, ResponseRepository responseRepo) {
+    CommandLineRunner initDatabase(QuestionRepository questionRepo) {
         return args -> {
-            responseRepo.deleteAll();
-            questionRepo.deleteAll();
+            if (questionRepo.count() > 0) {
+                return;
+            }
 
             // --- 1. BIEN-ÊTRE ---
             saveQuestion(questionRepo,
@@ -64,7 +64,7 @@ public class DataInitializer {
             saveQuestion(questionRepo,
                     "Votre pays en fait-il assez pour lutter contre le dérèglement climatique ?",
                     "Écologie", QuestionType.CHOICE,
-                    "Oui;Non, pas assez;C'est aux autres pays d'agir");
+                    "Oui;Moyennement;Non, pas assez;C'est aux autres pays d'agir");
 
             // --- 6. RÉSEAUX SOCIAUX ---
             saveQuestion(questionRepo,
