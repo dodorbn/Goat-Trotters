@@ -241,6 +241,18 @@ const submitForm = async () => {
             </select>
           </div>
 
+          <div v-else-if="q.type === 'CHOICE'" class="choices-container">
+            <button
+              v-for="opt in getOptions(q)"
+              :key="opt"
+              class="choice-btn"
+              :class="{ selected: answers[index] === opt }"
+              @click="answers[index] = opt"
+            >
+              {{ opt }}
+            </button>
+          </div>
+
           <div v-else-if="q.type === 'MULTIPLE_CHOICE'" class="multiple-choice-wrapper">
             <p class="hint-text">Vous pouvez sélectionner plusieurs réponses :</p>
             <div class="choices-container">
