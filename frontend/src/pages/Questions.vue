@@ -206,17 +206,20 @@ const submitForm = async () => {
           <h3>{{ q.text }}</h3>
 
           <div v-if="q.type === 'SCORE'" class="score-container">
-            <div class="score-buttons">
-              <button
-                v-for="n in 10"
-                :key="n"
-                class="score-btn"
-                :class="{ selected: answers[index] === n }"
-                @click="answers[index] = n"
-              >
-                {{ n }}
-              </button>
+
+            <div class="score-value">
+              {{ answers[index] ? answers[index] : '?' }} <span class="small">/ 10</span>
             </div>
+
+            <input
+              type="range"
+              min="1"
+              max="10"
+              step="1"
+              v-model.number="answers[index]"
+              class="custom-range"
+            >
+
             <div class="score-labels">
               <span>Pas du tout 😡</span>
               <span>Absolument 😍</span>
@@ -424,4 +427,59 @@ textarea.custom-input {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 .hint-text { font-size: 0.85rem; color: #aaa; margin-bottom: 0.5rem; font-style: italic; }
+
+.score-value {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #D4AF37;
+  margin-bottom: 1rem;
+}
+.score-value .small { font-size: 1rem; color: #888; }
+
+.custom-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #333;
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.9;
+  transition: opacity .2s;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.custom-range:hover { opacity: 1; }
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #D4AF37;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  margin-top: -8px;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border: none;
+  border-radius: 50%;
+  background: #D4AF37;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.custom-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  background: #2a2245;
+  border-radius: 5px;
+  border: 1px solid #444;
+}
 </style>
