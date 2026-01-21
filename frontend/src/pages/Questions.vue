@@ -226,7 +226,7 @@ const submitForm = async () => {
             </div>
           </div>
 
-          <div v-else-if="q.type === 'COUNTRY' || q.id === 2" class="input-group">
+          <div v-else-if="q.type === 'COUNTRY' || q.text.includes('résidence')" class="input-group">
             <select v-model="answers[index]" class="custom-input">
               <option :value="undefined" disabled>-- Choisir un pays --</option>
               <option v-for="(enName, frName) in countryMapping" :key="enName" :value="enName">
