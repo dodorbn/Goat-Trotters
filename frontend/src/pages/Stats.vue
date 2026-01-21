@@ -16,6 +16,9 @@ const stats = ref<any[]>([])
 const loading = ref(true)
 const error = ref('')
 
+const zoomLevel = ref(0.6)
+const resetZoom = () => zoomLevel.value = 0.6
+
 const showFilters = ref(false)
 const filters = ref({
   gender: '',
@@ -34,9 +37,13 @@ const hasActiveFilters = computed(() => {
   return filters.value.gender !== '' || filters.value.category !== '' || filters.value.ageRange !== ''
 })
 
+// Détection du type de question TEXTE
+const isClicheQuestion = computed(() => {
+  return currentQuestion.value?.type === 'TEXT' && currentQuestion.value?.text.toLowerCase().includes('cliché')
+})
+
 const loadQuestions = async () => {
   try {
-    // 👇 CHANGEMENT ICI : Utilisation de API_URL
     const res = await axios.get(`${API_URL}/questions`)
     questions.value = res.data
   } catch (err) {
@@ -68,6 +75,7 @@ const loadStats = async () => {
     })
 
     stats.value = response.data
+    resetZoom()
     updateMapColors()
   } catch (err) {
     console.error(err)
@@ -198,37 +206,32 @@ const wordCloudData = computed(() => {
     if (!stat.counts) return
     Object.entries(stat.counts).forEach(([word, count]) => {
       const cleanWord = word.trim()
-      if (cleanWord.length > 2) {
+      if (cleanWord.length > 1) {
         const val = Number(count)
         totalCounts[cleanWord] = (totalCounts[cleanWord] || 0) + val
         if (totalCounts[cleanWord] > maxFreq) maxFreq = totalCounts[cleanWord]
       }
     })
   })
-
   return Object.entries(totalCounts)
     .map(([text, value]) => ({
-      text, value,
+      text,
+      value,
       size: 1 + ((value / maxFreq) * 3)
     }))
     .sort((a, b) => b.value - a.value)
-    .slice(0, 50)
+    .slice(0, 100)
 })
 
 const shouldShowChart = computed(() => {
   if (!stats.value.length) return false
   if (!selectedQuestionId.value) return false
+  return currentQuestion.value?.type !== 'TEXT';
 
-  const idsToHide = [2, 23, 24]
-  if (idsToHide.includes(selectedQuestionId.value)) return false
-
-  if (currentQuestion.value?.type === 'TEXT') return false
-
-  return true
 })
 
 const getRandomColor = () => {
-  const colors = ['#D4AF37', '#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff']
+  const colors = ['#D4AF37', '#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#ffffff']
   return colors[Math.floor(Math.random() * colors.length)]
 }
 </script>
@@ -284,8 +287,34 @@ const getRandomColor = () => {
     <div class="map-wrapper">
       <div v-if="loading" class="loading-overlay"><div class="spinner"></div></div>
 
-      <div v-if="currentQuestion?.type === 'TEXT'" class="word-cloud-box fade-in">
-        <div v-if="wordCloudData.length > 0" class="cloud-container">
+      <div v-if="currentQuestion?.type === 'TEXT' && isClicheQuestion" class="word-cloud-box zoom-mode fade-in">
+
+        <div class="zoom-controls">
+          <button @click="zoomLevel -= 0.1" :disabled="zoomLevel <= 0.1">➖</button>
+          <input type="range" min="0.1" max="2.0" step="0.1" v-model.number="zoomLevel" class="zoom-slider">
+          <button @click="zoomLevel += 0.1" :disabled="zoomLevel >= 3.0">➕</button>
+          <button @click="resetZoom" class="btn-reset-zoom">Reboot 🔄</button>
+        </div>
+
+        <div v-if="wordCloudData.length > 0" class="zoom-viewport">
+          <div class="zoom-content" :style="{ transform: `scale(${zoomLevel})` }">
+              <span
+                v-for="word in wordCloudData"
+                :key="word.text"
+                class="cloud-word zoom-item"
+                :style="{ fontSize: (1 + Math.min(word.size, 3)) + 'rem', color: getRandomColor() }"
+                :title="word.value + ' occurrences'"
+              >
+                {{ word.text }}
+              </span>
+          </div>
+        </div>
+        <div v-else class="empty-cloud"><p>Pas encore de données.</p></div>
+        <p class="hint">Zoomez pour explorer les réponses.</p>
+      </div>
+
+      <div v-else-if="currentQuestion?.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
+        <div v-if="wordCloudData.length > 0" class="tag-cloud-container">
           <span
             v-for="word in wordCloudData"
             :key="word.text"
@@ -296,29 +325,25 @@ const getRandomColor = () => {
             {{ word.text }}
           </span>
         </div>
-        <div v-else class="empty-cloud">
-          <p>Pas assez de données pour générer un nuage.</p>
-        </div>
+        <div v-else class="empty-cloud"><p>Pas assez de données pour générer un nuage.</p></div>
       </div>
 
       <div v-show="currentQuestion?.type !== 'TEXT'" id="map" class="map"></div>
 
       <div class="map-legend" v-if="selectedQuestionId && currentQuestion && currentQuestion.type !== 'TEXT'">
-
         <div v-if="currentQuestion.type === 'SCORE'" class="legend-content">
           <span>1 (Nul)</span>
           <div class="gradient-bar-score"></div>
           <span>10 (Top)</span>
         </div>
-
         <div v-else-if="currentQuestion.type === 'CHOICE' || currentQuestion.type === 'MULTIPLE_CHOICE'" class="legend-choices">
           <div v-for="opt in currentQuestion.possibleAnswers.split(';')" :key="opt" class="legend-item">
             <span class="color-dot" :style="{ background: getLegendColor(opt) }"></span>
             <span>{{ opt }}</span>
           </div>
         </div>
-
       </div>
+
     </div>
 
     <div v-if="shouldShowChart" class="charts-section fade-in">
@@ -341,18 +366,17 @@ const getRandomColor = () => {
 .highlight { color: #D4AF37; font-weight: 700; }
 .subtitle { color: #aaa; }
 
-.map-wrapper { position: relative; width: 100%; height: 600px; border-radius: 16px; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; background: #222; }
-.map { width: 100%; height: 100%; z-index: 1; }
-
-.text-overlay {
-  position: absolute; inset: 0;
-  background: rgba(20, 20, 30, 0.85); backdrop-filter: blur(2px);
-  z-index: 100;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; color: #fff;
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  overflow: hidden;
+  background: #222;
 }
-.text-overlay p { font-size: 1.5rem; font-weight: bold; color: #D4AF37; margin-bottom: 0.5rem; }
-.text-overlay span { color: #aaa; max-width: 400px; line-height: 1.5; }
+.map { width: 100%; height: 100%; z-index: 1; }
 
 .map-legend {
   position: absolute; bottom: 30px; right: 30px;
@@ -360,48 +384,30 @@ const getRandomColor = () => {
   padding: 15px; border-radius: 8px; border: 1px solid #555;
   z-index: 500; max-width: 250px;
 }
-
 .legend-content { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
 .gradient-bar-score {
   width: 100px; height: 10px;
   background: linear-gradient(to right, #ff0000, #ffff00, #00ff00);
   border-radius: 4px;
 }
-
 .legend-choices { display: flex; flex-direction: column; gap: 5px; }
 .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
 .color-dot { width: 12px; height: 12px; border-radius: 50%; display: block; }
 
+/* CONTROLS */
 .control-panel { background: #2a2245; padding: 1.5rem; border-radius: 12px; border: 1px solid #444; margin-bottom: 2rem; }
 .loading-overlay { position: absolute; inset: 0; background: rgba(27,19,54,0.8); display: flex; align-items: center; justify-content: center; z-index: 10; }
 .spinner { width: 40px; height: 40px; border: 4px solid rgba(212,175,55,0.3); border-top-color: #D4AF37; border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.slide-fade-enter-active, .slide-fade-leave-active { transition: all 0.3s ease; max-height: 200px; opacity: 1; }
-.slide-fade-enter-from, .slide-fade-leave-to { max-height: 0; opacity: 0; }
 
 select {
-  width: 100%;
-  padding: 0.8rem;
-  padding-right: 2.5rem;
-  border-radius: 8px;
-  background: #1b1336;
-  color: white;
-  border: 1px solid #555;
-  cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  width: 100%; padding: 0.8rem; padding-right: 2.5rem;
+  border-radius: 8px; background: #1b1336; color: white; border: 1px solid #555;
+  cursor: pointer; -webkit-appearance: none; -moz-appearance: none; appearance: none;
 }
 
 .charts-section { margin-top: 3rem; }
-.chart-container {
-  background: #2a2245;
-  padding: 1rem;
-  border-radius: 16px;
-  height: 500px;
-  width: 100%;
-  position: relative;
-}
+.chart-container { background: #2a2245; padding: 1rem; border-radius: 16px; height: 500px; width: 100%; position: relative; }
 .no-data { text-align: center; padding: 2rem; color: #888; background: #2a2245; margin-top: 2rem; border-radius: 8px; }
 
 .toggle-row { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
@@ -417,13 +423,43 @@ label { display: block; color: #D4AF37; font-weight: bold; font-size: 0.9rem; te
 .arrow-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #D4AF37; pointer-events: none; }
 
 .word-cloud-box {
-  width: 100%; height: 100%; background: #222; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2rem;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle, #2a2245 0%, #1b1336 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden; padding: 2rem; position: relative;
 }
-.cloud-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1.5rem; max-width: 90%; }
-.cloud-word { font-family: 'Segoe UI', sans-serif; font-weight: bold; cursor: default; transition: transform 0.3s ease, text-shadow 0.3s ease; line-height: 1; }
-.cloud-word:hover { transform: scale(1.2); text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); z-index: 10; }
 .empty-cloud { color: #777; font-style: italic; }
-.main-select {
-  margin-bottom: 2rem;
+.cloud-word { font-family: 'Segoe UI', sans-serif; font-weight: bold; cursor: default; transition: transform 0.3s ease, text-shadow 0.3s ease; line-height: 1.1; }
+.cloud-word:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); z-index: 10; }
+
+.zoom-mode { padding: 0; }
+.zoom-controls {
+  position: absolute; top: 20px; z-index: 100;
+  display: flex; gap: 10px; align-items: center;
+  background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 50px;
+  backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1);
+}
+.zoom-slider { cursor: pointer; accent-color: #D4AF37; width: 100px; }
+.zoom-controls button { background: #333; color: white; border: 1px solid #555; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center;}
+.zoom-controls button:hover { background: #555; }
+.btn-reset-zoom { border-radius: 12px !important; width: auto !important; padding: 0 10px; font-size: 0.8rem; }
+
+.zoom-viewport {
+  width: 100%; height: 100%;
+  overflow: auto;
+  display: flex; justify-content: center; align-items: center;
+}
+.zoom-content {
+  width: 1500px; height: 1500px;
+  display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; align-content: center;
+  transform-origin: center center;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.zoom-item { white-space: nowrap; }
+.hint { position: absolute; bottom: 20px; color: #888; font-size: 0.8rem; font-style: italic; }
+
+.tag-cloud-container {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem;
+  max-width: 900px;
 }
 </style>
