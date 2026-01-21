@@ -226,7 +226,7 @@ const submitForm = async () => {
             </div>
           </div>
 
-          <div v-else-if="q.type === 'COUNTRY' || q.text.toLowerCase().includes('pays')" class="input-group">
+          <div v-else-if="q.type === 'COUNTRY' || q.id === 2" class="input-group">
             <select v-model="answers[index]" class="custom-input">
               <option :value="undefined" disabled>-- Choisir un pays --</option>
               <option v-for="(enName, frName) in countryMapping" :key="enName" :value="enName">
@@ -321,9 +321,6 @@ const submitForm = async () => {
 .input-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; }
 .input-group label { margin-bottom: 0.5rem; color: #D4AF37; font-size: 0.9rem; }
 
-/* --- 🧹 NETTOYAGE CSS POUR UNIFORMISER --- */
-
-/* Style de base commun pour Inputs, Selects et Textarea */
 .custom-input {
   background: #2a2245;
   border: 1px solid #444;
@@ -334,12 +331,10 @@ const submitForm = async () => {
   outline: none;
   width: 100%;
 
-  /* Pour s'assurer que Select et Input font la même taille */
   height: 48px;
   box-sizing: border-box;
 }
 
-/* Suppression du style par défaut des SELECT pour mettre le notre */
 select.custom-input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -352,28 +347,23 @@ select.custom-input {
   cursor: pointer;
 }
 
-/* Suppression des flèches moches de l'INPUT NUMBER */
 input[type=number].no-arrow::-webkit-outer-spin-button,
 input[type=number].no-arrow::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 input[type=number].no-arrow {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
 }
 
-/* Focus */
 .custom-input:focus { border-color: #D4AF37; }
 
-/* Textarea spécifique */
 textarea.custom-input {
   resize: vertical;
   min-height: 80px;
   font-family: inherit;
-  height: auto; /* Le textarea garde sa hauteur auto */
+  height: auto;
 }
-
-/* --- FIN DU NETTOYAGE --- */
 
 .row { display: flex; gap: 1rem; }
 .half { flex: 1; }
@@ -387,14 +377,7 @@ textarea.custom-input {
 .question-block h3 { margin-bottom: 1rem; font-weight: 400; font-size: 1.1rem; color: #eee; }
 
 .score-container { display: flex; flex-direction: column; gap: 0.5rem; }
-.score-buttons { display: flex; gap: 5px; justify-content: space-between; flex-wrap: wrap; }
-.score-btn {
-  width: 40px; height: 40px;
-  border-radius: 8px; border: 1px solid #444; background: #2a2245; color: white;
-  cursor: pointer; transition: all 0.2s; font-weight: bold;
-}
-.score-btn:hover { border-color: #D4AF37; }
-.score-btn.selected { background: #D4AF37; color: #1b1336; border-color: #D4AF37; transform: scale(1.1); }
+
 .score-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #888; margin-top: 5px; }
 
 .choices-container { display: grid; grid-template-columns: 1fr; gap: 10px; }
