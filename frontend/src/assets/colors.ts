@@ -15,7 +15,7 @@ export const forcedColors: Record<string, string> = {
   'Oui': '#3cb44b', 'Oui, totalement': '#3cb44b', 'Oui (Pro)': '#3cb44b',
   'Oui (Perso)': '#808000', 'Pour': '#3cb44b', 'Une chance': '#3cb44b',
   'Confiance': '#3cb44b', 'Positif': '#3cb44b', 'Très tolérante': '#3cb44b',
-  'Fort (actions concrètes)': '#3cb44b',
+  'Fort (actions concrètes)': '#3cb44b', 'Je pratique régulièrement' :'#3cb44b',
 
   // Négatif (Rouges)
   'Non': '#e6194b', 'Non, jamais': '#e6194b', 'Non, pas du tout': '#e6194b',
@@ -26,7 +26,7 @@ export const forcedColors: Record<string, string> = {
   // Neutre / Mitigé
   'Peut-être': '#ffe119', 'Mitigé': '#f58231',
   'Indifférent': '#cccccc', 'Je ne vote pas': '#cccccc',
-  'Ça va': '#4363d8', 'Moyennement': '#f58231', 'C\'est compliqué': '#f58231'
+  'Ça va': '#4363d8', 'Moyennement': '#f58231', 'C\'est compliqué': '#f58231', 'Je pratique occasionnellement' :'#f58231'
 }
 
 // 3. La fonction exportée pour récupérer la couleur
