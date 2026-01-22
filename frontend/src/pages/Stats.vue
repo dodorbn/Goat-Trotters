@@ -35,10 +35,8 @@ const onDrag = (e: MouseEvent) => {
   if (!isDragging.value) return
   const deltaX = e.clientX - lastMousePos.value.x
   const deltaY = e.clientY - lastMousePos.value.y
-
   pan.value.x += deltaX
   pan.value.y += deltaY
-
   lastMousePos.value = { x: e.clientX, y: e.clientY }
 }
 
@@ -329,20 +327,25 @@ const getRandomColor = () => {
         </div>
         <div v-if="wordCloudData.length === 0" class="empty-cloud"><p>Pas encore de données.</p></div>
         <p class="hint">Cliquez et glissez pour déplacer • Zoomez pour explorer</p>
-      </div><div v-else-if="currentQuestion && currentQuestion.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
-      <div v-if="wordCloudData.length > 0" class="tag-cloud-container">
+      </div>
+
+      <div v-else-if="currentQuestion && currentQuestion.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
+        <div v-if="wordCloudData.length > 0" class="tag-cloud-container">
           <span
             v-for="word in wordCloudData"
             :key="word.text"
             class="cloud-word"
-            :style="{ fontSize: word.size + 'rem', color: getRandomColor() }"
+            :style="{
+              fontSize: `calc(${word.size}rem * var(--cloud-scale))` ,
+              color: getRandomColor()
+            }"
             :title="word.value + ' occurrences'"
           >
             {{ word.text }}
           </span>
+        </div>
+        <div v-else class="empty-cloud"><p>Pas assez de données pour générer un nuage.</p></div>
       </div>
-      <div v-else class="empty-cloud"><p>Pas assez de données pour générer un nuage.</p></div>
-    </div>
 
       <div v-show="currentQuestion && currentQuestion.type !== 'TEXT'" id="map" class="map"></div>
 
@@ -376,21 +379,26 @@ const getRandomColor = () => {
 </template>
 
 <style scoped>
-.stats-container { max-width: 1200px; margin: 0 auto; padding: 2rem; color: white; min-height: 100vh; }
+.stats-container {
+  max-width: 1200px; margin: 0 auto; padding: 2rem; color: white; min-height: 100vh;
+  --cloud-scale: 1;
+}
+
+@media (max-width: 768px) {
+  .stats-container {
+    padding: 1rem;
+    --cloud-scale: 0.55;
+  }
+  .tag-cloud-container {
+    gap: 0.5rem !important;
+  }
+}
+
 .stats-header { text-align: center; margin-bottom: 2rem; }
 .highlight { color: #D4AF37; font-weight: 700; }
 .subtitle { color: #aaa; }
 
-.map-wrapper {
-  position: relative;
-  width: 100%;
-  height: 600px;
-  border-radius: 16px;
-  border: 1px solid #333;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-  overflow: hidden;
-  background: #222;
-}
+.map-wrapper { position: relative; width: 100%; height: 600px; border-radius: 16px; border: 1px solid #333; box-shadow: 0 10px 40px rgba(0,0,0,0.6); overflow: hidden; background: #222; }
 .map { width: 100%; height: 100%; z-index: 1; }
 .map-legend { position: absolute; bottom: 30px; right: 30px; background: rgba(18, 12, 36, 0.95); padding: 15px; border-radius: 8px; border: 1px solid #555; z-index: 500; max-width: 250px; }
 .legend-content { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; }
@@ -424,7 +432,15 @@ label { display: block; color: #D4AF37; font-weight: bold; font-size: 0.9rem; te
 
 .word-cloud-box { width: 100%; height: 100%; background: radial-gradient(circle, #2a2245 0%, #1b1336 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 2rem; position: relative; }
 .empty-cloud { color: #777; font-style: italic; }
-.cloud-word { font-family: 'Segoe UI', sans-serif; font-weight: bold; cursor: default; transition: transform 0.3s ease, text-shadow 0.3s ease; line-height: 1.1; }
+
+.cloud-word {
+  font-family: 'Segoe UI', sans-serif; font-weight: bold; cursor: default;
+  transition: transform 0.3s ease, text-shadow 0.3s ease; line-height: 1.1;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-align: center;
+}
 .cloud-word:hover { transform: scale(1.1); text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); z-index: 10; }
 
 .zoom-mode { padding: 0; cursor: grab; }
@@ -437,15 +453,14 @@ label { display: block; color: #D4AF37; font-weight: bold; font-size: 0.9rem; te
 .zoom-viewport { width: 100%; height: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 .interactive:active { cursor: grabbing; }
 
-.zoom-content {
-  display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; align-content: center;
-  width: 1500px; height: 1500px;
-  transform-origin: center center;
-}
+.zoom-content { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; align-content: center; width: 1500px; height: 1500px; transform-origin: center center; }
 
 .card-style { background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3); white-space: nowrap; }
 .card-style:hover { background: #D4AF37; color: #1b1336 !important; border-color: #D4AF37; }
 .count-badge { background: rgba(0,0,0,0.3); font-size: 0.6em; padding: 2px 6px; border-radius: 10px; margin-left: 5px; vertical-align: middle; }
 .hint { position: absolute; bottom: 20px; color: #888; font-size: 0.8rem; font-style: italic; pointer-events: none; }
-.tag-cloud-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; max-width: 900px; }
+.tag-cloud-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; max-width: 900px; width: 100%; }
+
+.slide-fade-enter-active, .slide-fade-leave-active { transition: all 0.3s ease; max-height: 200px; opacity: 1; }
+.slide-fade-enter-from, .slide-fade-leave-to { max-height: 0; opacity: 0; }
 </style>
