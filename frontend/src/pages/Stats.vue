@@ -316,17 +316,18 @@ const getRandomColor = () => {
               <span
                 v-for="word in wordCloudData"
                 :key="word.text"
-                class="cloud-word zoom-item card-style"
-                :style="{ fontSize: (1 + Math.min(word.size, 3)) + 'rem' }"
+                class="cloud-word zoom-item"
+                :style="{
+                  fontSize: (1 + Math.min(word.size, 3)) + 'rem',
+                  color: getRandomColor()
+                }"
                 :title="word.value + ' occurrences'"
               >
                 {{ word.text }}
-                <span v-if="word.value > 1" class="count-badge">x{{ word.value }}</span>
               </span>
           </div>
         </div>
         <div v-if="wordCloudData.length === 0" class="empty-cloud"><p>Pas encore de données.</p></div>
-        <p class="hint">Cliquez et glissez pour déplacer • Zoomez pour explorer</p>
       </div>
 
       <div v-else-if="currentQuestion && currentQuestion.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
@@ -455,10 +456,8 @@ label { display: block; color: #D4AF37; font-weight: bold; font-size: 0.9rem; te
 
 .zoom-content { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; align-content: center; width: 1500px; height: 1500px; transform-origin: center center; }
 
-.card-style { background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3); white-space: nowrap; }
-.card-style:hover { background: #D4AF37; color: #1b1336 !important; border-color: #D4AF37; }
-.count-badge { background: rgba(0,0,0,0.3); font-size: 0.6em; padding: 2px 6px; border-radius: 10px; margin-left: 5px; vertical-align: middle; }
-.hint { position: absolute; bottom: 20px; color: #888; font-size: 0.8rem; font-style: italic; pointer-events: none; }
+.zoom-item { white-space: nowrap; }
+
 .tag-cloud-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; max-width: 900px; width: 100%; }
 
 .slide-fade-enter-active, .slide-fade-leave-active { transition: all 0.3s ease; max-height: 200px; opacity: 1; }
