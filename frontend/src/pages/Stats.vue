@@ -65,7 +65,8 @@ const hasActiveFilters = computed(() => {
 })
 
 const isClicheQuestion = computed(() => {
-  return currentQuestion.value?.type === 'TEXT' && currentQuestion.value?.text.toLowerCase().includes('cliché')
+  if (!currentQuestion.value) return false
+  return currentQuestion.value.type === 'TEXT' && currentQuestion.value.text.toLowerCase().includes('cliché')
 })
 
 const loadQuestions = async () => {
@@ -203,7 +204,7 @@ watch([selectedQuestionId, filters], async ([newQ]) => {
 }, { deep: true })
 
 const wordCloudData = computed(() => {
-  if (currentQuestion.value?.type !== 'TEXT' || !stats.value.length) return []
+  if (!currentQuestion.value || currentQuestion.value.type !== 'TEXT' || !stats.value.length) return []
   const totalCounts: Record<string, number> = {}
   let maxFreq = 1
 
@@ -231,8 +232,8 @@ const wordCloudData = computed(() => {
 const shouldShowChart = computed(() => {
   if (!stats.value.length) return false
   if (!selectedQuestionId.value) return false
-  return currentQuestion.value?.type !== 'TEXT';
-
+  if (currentQuestion.value && currentQuestion.value.type === 'TEXT') return false
+  return true
 })
 
 const getRandomColor = () => {
@@ -292,8 +293,7 @@ const getRandomColor = () => {
     <div class="map-wrapper">
       <div v-if="loading" class="loading-overlay"><div class="spinner"></div></div>
 
-      <div v-if="currentQuestion?.type === 'TEXT' && isClicheQuestion" class="word-cloud-box zoom-mode fade-in">
-
+      <div v-if="currentQuestion && currentQuestion.type === 'TEXT' && isClicheQuestion" class="word-cloud-box zoom-mode fade-in">
         <div class="zoom-controls">
           <button @click="zoomLevel -= 0.1" :disabled="zoomLevel <= 0.1">➖</button>
           <input type="range" min="0.1" max="2.0" step="0.1" v-model.number="zoomLevel" class="zoom-slider">
@@ -327,12 +327,10 @@ const getRandomColor = () => {
               </span>
           </div>
         </div>
-        <div v-else class="empty-cloud"><p>Pas encore de données.</p></div>
+        <div v-if="wordCloudData.length === 0" class="empty-cloud"><p>Pas encore de données.</p></div>
         <p class="hint">Cliquez et glissez pour déplacer • Zoomez pour explorer</p>
-      </div>
-
-      <div v-else-if="currentQuestion?.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
-        <div v-if="wordCloudData.length > 0" class="tag-cloud-container">
+      </div><div v-else-if="currentQuestion && currentQuestion.type === 'TEXT' && !isClicheQuestion" class="word-cloud-box fade-in">
+      <div v-if="wordCloudData.length > 0" class="tag-cloud-container">
           <span
             v-for="word in wordCloudData"
             :key="word.text"
@@ -342,11 +340,11 @@ const getRandomColor = () => {
           >
             {{ word.text }}
           </span>
-        </div>
-        <div v-else class="empty-cloud"><p>Pas assez de données pour générer un nuage.</p></div>
       </div>
+      <div v-else class="empty-cloud"><p>Pas assez de données pour générer un nuage.</p></div>
+    </div>
 
-      <div v-show="currentQuestion?.type !== 'TEXT'" id="map" class="map"></div>
+      <div v-show="currentQuestion && currentQuestion.type !== 'TEXT'" id="map" class="map"></div>
 
       <div class="map-legend" v-if="selectedQuestionId && currentQuestion && currentQuestion.type !== 'TEXT'">
         <div v-if="currentQuestion.type === 'SCORE'" class="legend-content">
@@ -366,7 +364,7 @@ const getRandomColor = () => {
     <div v-if="shouldShowChart" class="charts-section fade-in">
       <h2>Analyse détaillée</h2>
       <div class="chart-container">
-        <StatsChart :stats="stats" :questionType="currentQuestion?.type" />
+        <StatsChart :stats="stats" :questionType="currentQuestion ? currentQuestion.type : ''" />
       </div>
     </div>
 
@@ -402,7 +400,7 @@ const getRandomColor = () => {
 .color-dot { width: 12px; height: 12px; border-radius: 50%; display: block; }
 
 .control-panel { background: #2a2245; padding: 1.5rem; border-radius: 12px; border: 1px solid #444; margin-bottom: 2rem; }
-.main-select { margin-bottom: 0; /* Nettoyage marge interne */ }
+.main-select { margin-bottom: 0; }
 .loading-overlay { position: absolute; inset: 0; background: rgba(27,19,54,0.8); display: flex; align-items: center; justify-content: center; z-index: 10; }
 .spinner { width: 40px; height: 40px; border: 4px solid rgba(212,175,55,0.3); border-top-color: #D4AF37; border-radius: 50%; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -412,11 +410,7 @@ select { width: 100%; padding: 0.8rem; padding-right: 2.5rem; border-radius: 8px
 .chart-container { background: #2a2245; padding: 1rem; border-radius: 16px; height: 500px; width: 100%; position: relative; }
 .no-data { text-align: center; padding: 2rem; color: #888; background: #2a2245; margin-top: 2rem; border-radius: 8px; }
 
-.toggle-row {
-  display: flex; justify-content: center; gap: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-}
+.toggle-row { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; margin-bottom: 1rem; }
 .btn-toggle-filters { background: transparent; color: #D4AF37; border: 1px solid #D4AF37; padding: 8px 24px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
 .btn-toggle-filters:hover, .btn-toggle-filters.active { background: #D4AF37; color: #1b1336; }
 .btn-reset { background: rgba(255,107,107,0.1); color: #ff6b6b; border: 1px solid #ff6b6b; padding: 8px 18px; border-radius: 50px; cursor: pointer; transition: all 0.3s; }
@@ -449,26 +443,9 @@ label { display: block; color: #D4AF37; font-weight: bold; font-size: 0.9rem; te
   transform-origin: center center;
 }
 
-.card-style {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff !important;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  white-space: nowrap;
-}
+.card-style { background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff !important; box-shadow: 0 4px 10px rgba(0,0,0,0.3); white-space: nowrap; }
 .card-style:hover { background: #D4AF37; color: #1b1336 !important; border-color: #D4AF37; }
-
-.count-badge {
-  background: rgba(0,0,0,0.3);
-  font-size: 0.6em;
-  padding: 2px 6px;
-  border-radius: 10px;
-  margin-left: 5px;
-  vertical-align: middle;
-}
-
+.count-badge { background: rgba(0,0,0,0.3); font-size: 0.6em; padding: 2px 6px; border-radius: 10px; margin-left: 5px; vertical-align: middle; }
 .hint { position: absolute; bottom: 20px; color: #888; font-size: 0.8rem; font-style: italic; pointer-events: none; }
 .tag-cloud-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 1rem; max-width: 900px; }
 </style>
