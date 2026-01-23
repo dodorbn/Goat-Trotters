@@ -99,7 +99,32 @@ const loadStats = async () => {
       }
     })
 
-    stats.value = response.data
+    const rawStats = response.data
+    const mergedMap = new Map()
+
+    rawStats.forEach((stat: any) => {
+      const normalizedKey = stat.country.toUpperCase().trim()
+
+      if (!mergedMap.has(normalizedKey)) {
+        const prettyName = normalizedKey.charAt(0).toUpperCase() + normalizedKey.slice(1).toLowerCase()
+
+        mergedMap.set(normalizedKey, {
+          ...stat,
+          country: prettyName,
+          counts: { ...stat.counts }
+        })
+      } else {
+        const existing = mergedMap.get(normalizedKey)
+
+        if (stat.counts) {
+          Object.entries(stat.counts).forEach(([answerKey, count]) => {
+            existing.counts[answerKey] = (existing.counts[answerKey] || 0) + Number(count)
+          })
+        }
+      }
+    })
+    stats.value = Array.from(mergedMap.values())
+
     resetZoom()
     updateMapColors()
   } catch (err) {
