@@ -111,11 +111,13 @@ const submitForm = async () => {
   }
 
   try {
-    const promises = questions.value.map((q, index) => {
+    for (let i = 0; i < questions.value.length; i++) {
+      const q = questions.value[i];
+
       let englishCountry = countryMapping[form.value.country] || form.value.country
       if (englishCountry) englishCountry = englishCountry.toUpperCase();
 
-      let finalAnswer = answers.value[index];
+      let finalAnswer = answers.value[i];
       if (finalAnswer === undefined || finalAnswer === null) finalAnswer = "";
       finalAnswer = String(finalAnswer).trim();
 
@@ -138,10 +140,8 @@ const submitForm = async () => {
         answer: finalAnswer,
         question: { id: q.id }
       }
-      return axios.post(`${API_URL}/responses`, payload)
-    })
-
-    await Promise.all(promises)
+      await axios.post(`${API_URL}/responses`, payload)
+    }
     success.value = true
     setTimeout(() => { router.push('/stats') }, 2500)
 
