@@ -22,7 +22,7 @@ const countryMapping: Record<string, string> = {
   'Lituanie': 'Lithuania', 'Luxembourg': 'Luxembourg', 'Malte': 'Malta', 'Pays-Bas': 'Netherlands',
   'Pologne': 'Poland', 'Portugal': 'Portugal', 'République tchèque': 'Czech Republic',
   'Roumanie': 'Romania', 'Royaume-Uni': 'United Kingdom', 'Slovaquie': 'Slovakia',
-  'Slovénie': 'Slovenia', 'Suède': 'Sweden'
+  'Slovénie': 'Slovenia', 'Suède': 'Sweden', 'Suisse': 'Switzerland'
 }
 
 const displayCountries = Object.keys(countryMapping).sort()
