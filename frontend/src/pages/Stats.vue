@@ -224,6 +224,16 @@ onMounted(async () => {
 
 watch([selectedQuestionId, filters], async ([newQ]) => {
   if (newQ) await loadStats()
+
+  if (currentQuestion.value && currentQuestion.value.type !== 'TEXT') {
+    setTimeout(() => {
+      if (map) {
+        map.invalidateSize()
+        map.setView([54, 15], 4)
+        updateMapColors()
+      }
+    }, 200)
+  }
 }, { deep: true })
 
 const wordCloudData = computed(() => {
