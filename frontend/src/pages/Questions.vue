@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 
 const router = useRouter()
+const route = useRoute()
 const questions = ref<any[]>([])
 const loading = ref(false)
 const error = ref('')
 const success = ref(false)
 const currentStep = ref(1)
+
+const isAdmin = computed(() => route.query.mode === 'admin')
 
 const API_URL = import.meta.env.VITE_API_BASE_URL
   ? `${import.meta.env.VITE_API_BASE_URL}/api`
@@ -95,7 +98,8 @@ function previousStep() {
 }
 
 const submitForm = async () => {
-  if (!isAnswersComplete.value) return
+  if (!isAnswersComplete.value && !isAdmin.value) return
+
   loading.value = true
   error.value = ''
 
@@ -103,7 +107,7 @@ const submitForm = async () => {
     const q = questions.value[i];
     const rawAnswer = String(answers.value[i] || "").trim();
 
-    if (q.text.toLowerCase().includes("un seul mot") && rawAnswer.includes(" ")) {
+    if (rawAnswer.length > 0 && q.text.toLowerCase().includes("un seul mot") && rawAnswer.includes(" ")) {
       error.value = `Oups ! Pour la question "${q.text}", merci de n'écrire qu'un seul mot (sans espace).`;
       loading.value = false;
       return;
@@ -113,13 +117,16 @@ const submitForm = async () => {
   try {
     for (let i = 0; i < questions.value.length; i++) {
       const q = questions.value[i];
+      let finalAnswer = answers.value[i];
+
+      if (finalAnswer === undefined || finalAnswer === null || String(finalAnswer).trim() === '') {
+        continue;
+      }
+
+      finalAnswer = String(finalAnswer).trim();
 
       let englishCountry = countryMapping[form.value.country] || form.value.country
       if (englishCountry) englishCountry = englishCountry.toUpperCase();
-
-      let finalAnswer = answers.value[i];
-      if (finalAnswer === undefined || finalAnswer === null) finalAnswer = "";
-      finalAnswer = String(finalAnswer).trim();
 
       if (q.type === 'TEXT') {
         if (q.text.toLowerCase().includes("un seul mot")) {
@@ -179,6 +186,7 @@ const submitForm = async () => {
 
       <div class="step-title">
         {{ currentStep === 1 ? 'Qui êtes-vous ?' : 'Vos Opinions' }}
+        <span v-if="isAdmin" style="color: #ff6b6b; font-size: 0.8rem; margin-left: 10px;">(Mode Interview)</span>
       </div>
 
       <div v-if="currentStep === 1" class="step-content fade-in">
@@ -324,7 +332,11 @@ const submitForm = async () => {
 
         <div class="buttons-row">
           <button class="btn-secondary" @click="previousStep">Retour</button>
-          <button class="btn-primary" :disabled="!isAnswersComplete || loading" @click="submitForm">
+          <button
+            class="btn-primary"
+            :disabled="(!isAnswersComplete && !isAdmin) || loading"
+            @click="submitForm"
+          >
             {{ loading ? 'Envoi...' : 'Valider mes réponses' }}
           </button>
         </div>
