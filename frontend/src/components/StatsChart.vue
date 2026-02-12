@@ -50,8 +50,13 @@ const chartData = computed(() => {
         })
       }
     })
-    const labels = Object.keys(globalCounts).sort()
-    const data = labels.map(label => globalCounts[label])
+
+    const sortedEntries = Object.entries(globalCounts)
+      .map(([label, count]) => ({ label, count: Number(count) }))
+      .sort((a, b) => b.count - a.count)
+
+    const labels = sortedEntries.map(e => e.label)
+    const data = sortedEntries.map(e => e.count)
     const backgroundColor = labels.map(label => getColorForText(label))
 
     return {
